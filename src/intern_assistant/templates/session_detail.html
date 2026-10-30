@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}会话详情{% endblock %}
+{% block h1 %}会话详情 <span style="font-size:13px;color:var(--muted)">{{ session.id }}</span>{% endblock %}
+{% block body %}
+<div class="card">
+  <h2>对话记录（开始于 {{ session.created_at|ts }}）</h2>
+  {% for m in messages %}
+  <div class="msg {{ m.role }}">
+    <div class="role">{{ "员工" if m.role == "user" else "助手" }} · {{ m.created_at|ts }}</div>
+    <div class="bubble">{{ m.content }}</div>
+    {% if m.citations %}
+    <div class="cite">
+      引用来源：
+      {% for c in m.citations %}[片段{{ c.rank }}｜{{ c.document }}·{{ c.section }}]{% endfor %}
+    </div>
+    {% endif %}
+  </div>
+  {% endfor %}
+  {% if not messages %}<p style="font-size:13px;color:var(--muted)">该会话暂无消息</p>{% endif %}
+</div>
+<p><a class="btn" href="/admin/records">← 返回会话列表</a></p>
+{% endblock %}

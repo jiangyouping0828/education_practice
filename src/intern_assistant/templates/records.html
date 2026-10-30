@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}问答记录{% endblock %}
+{% block nav_rec %}active{% endblock %}
+{% block h1 %}问答记录{% endblock %}
+{% block body %}
+<div class="card">
+  <table>
+    <tr><th>会话</th><th>提问数</th><th>消息总数</th><th>最近活跃</th><th></th></tr>
+    {% for s in sessions %}
+    <tr>
+      <td>{{ s.title or "（无标题）" }}</td>
+      <td>{{ s.q_count or 0 }}</td>
+      <td>{{ s.msg_count }}</td>
+      <td>{{ s.last_active_at|ts }}</td>
+      <td><a href="/admin/sessions/{{ s.id }}">查看对话</a></td>
+    </tr>
+    {% endfor %}
+    {% if not sessions %}<tr><td colspan="5">暂无会话记录</td></tr>{% endif %}
+  </table>
+</div>
+{% endblock %}
