@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block h1 %}仪表盘{% endblock %}
+{% block body %}
+<div class="stats">
+  <div class="stat"><div class="num">{{ stats.sessions }}</div><div class="lbl">会话总数</div></div>
+  <div class="stat"><div class="num">{{ stats.messages }}</div><div class="lbl">消息总数</div></div>
+  <div class="stat"><div class="num">{{ stats.documents }}</div><div class="lbl">制度文档</div></div>
+  <div class="stat"><div class="num">{{ stats.chunks }}</div><div class="lbl">知识片段</div></div>
+</div>
+
+<div class="card">
+  <h2>问答纪律（已强制生效于全部 AI 回答）</h2>
+  {% for d in discipline %}
+  <div class="rule"><span class="no">{{ loop.index }}</span><span>{{ d }}</span></div>
+  {% endfor %}
+</div>
+
+<div class="card">
+  <h2>系统状态</h2>
+  <table>
+    <tr><td>检索模式</td><td>{{ retrieval_mode }}</td></tr>
+    <tr><td>对话模型</td><td>{{ llm_model }}</td></tr>
+  </table>
+</div>
+
+<div class="card">
+  <h2>最近会话</h2>
+  <table>
+    <tr><th>会话</th><th>消息数</th><th>开始时间</th><th></th></tr>
+    {% for s in recent %}
+    <tr>
+      <td>{{ s.title or "（无标题）" }}</td>
+      <td>{{ s.msg_count }}</td>
+      <td>{{ s.created_at|ts }}</td>
+      <td><a href="/admin/sessions/{{ s.id }}">查看</a></td>
+    </tr>
+    {% endfor %}
+    {% if not recent %}<tr><td colspan="4">暂无会话记录</td></tr>{% endif %}
+  </table>
+</div>
+{% endblock %}

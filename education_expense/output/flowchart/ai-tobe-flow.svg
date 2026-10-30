@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1960" height="1290" viewBox="0 0 1960 1290" font-family="'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif">
+<defs>
+  <marker id="arw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#3F4B5C"/></marker>
+  <marker id="arwW" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#B4690E"/></marker>
+  <style>
+    .bg{fill:#FFFFFF}
+    .lane{fill:#F7F9FC;stroke:#DDE3EC;stroke-width:1}
+    .lane-ai{fill:#F1F7F4;stroke:#C9E2D6;stroke-width:1.2}
+    .lane-t{font-size:14px;font-weight:700;fill:#1A237E}
+    .lane-t-ai{font-size:14px;font-weight:700;fill:#15604A}
+    .lane-s{font-size:11.5px;fill:#4E5A6B}
+    .nd-s{fill:#FFFFFF;stroke:#1565C0;stroke-width:1.3}
+    .nd-ai{fill:#EEF7F2;stroke:#1E8A63;stroke-width:1.5}
+    .ai-bar{fill:#1E8A63}
+    .nd-d{fill:#FFF8E8;stroke:#B4690E;stroke-width:1.4}
+    .nd-g{fill:#FDECEA;stroke:#B3271E;stroke-width:1.6}
+    .nd-start{fill:#1565C0;stroke:#1565C0}
+    .nd-end{fill:#1A237E;stroke:#1A237E}
+    .nd-pain{fill:#FFF6E5;stroke:#B4690E;stroke-width:1;stroke-dasharray:4 3}
+    .tx-t{fill:#1B2430;font-weight:600}
+    .tx-t-d{fill:#FFFFFF;font-weight:700}
+    .tx-s{font-size:11px;fill:#4E5A6B}
+    .tx-sd{font-size:10.5px;fill:#E3EEFB}
+    .chip{fill:#EDF2FA;stroke:#C9D8EC;stroke-width:0.8}
+    .chip-t{font-size:9px;fill:#2C5A96;font-weight:700}
+    .eg{fill:none;stroke:#3F4B5C;stroke-width:1.4}
+    .eg-main{stroke-width:1.7}
+    .eg-dash{stroke-dasharray:5 4}
+    .eg-warn{stroke:#B4690E}
+    .lb{font-size:10px;fill:#3F4B5C;text-anchor:middle;font-weight:700}
+    .lb-bg{fill:#FFFFFF}
+    .ttl{font-size:27px;font-weight:700;fill:#1A237E}
+    .stl{font-size:13px;fill:#4E5A6B}
+    .lg{font-size:11.5px;fill:#3F4B5C}
+    .hn{font-size:12.5px;font-weight:700;fill:#1A237E}
+  </style>
+</defs>
+<rect width="1960" height="1290" class="bg"/>
+<g><rect x="176" y="148" width="1748" height="196" class="lane"/><text x="194" y="180" class="lane-t">企业侧</text><text x="194" y="198" class="lane-s">企业实习导师 · 5 家企业</text></g>
+<g><rect x="176" y="344" width="1748" height="236" class="lane lane-ai"/><text x="194" y="376" class="lane-t-ai">AI 能力层</text><text x="194" y="394" class="lane-s">仅整理与起草，不判定、不打分</text></g>
+<g><rect x="176" y="580" width="1748" height="200" class="lane"/><text x="194" y="612" class="lane-t">教师侧 / 平台服务</text><text x="194" y="630" class="lane-s">实习指导教师 · 每人 30 人｜批次映射与看板由平台承担</text></g>
+<g><rect x="176" y="780" width="1748" height="236" class="lane"/><text x="194" y="812" class="lane-t">教务侧</text><text x="194" y="830" class="lane-s">教务管理员 · 复核闸门</text></g>
+<g><rect x="176" y="1016" width="1748" height="174" class="lane"/><text x="194" y="1048" class="lane-t">专业组 / 课程侧</text><text x="194" y="1066" class="lane-s">教学质量负责人 · 专业组</text></g>
+<g><path d="M354,246 L396,246" class="eg" marker-end="url(#arw)"/></g>
+<g><path d="M602,246 L642,246" class="eg" marker-end="url(#arw)"/></g>
+<g><path d="M745,286 L745,336 L499,336 L499,386" class="eg" marker-end="url(#arw)"/></g>
+<g><path d="M602,432 L652,432" class="eg" marker-end="url(#arw)"/></g>
+<g><path d="M745,480 L745,489 L745,489 L745,498" class="eg eg-warn" marker-end="url(#arwW)"/><rect x="752" y="482" width="18" height="15" rx="4" class="lb-bg"/><text x="761" y="493" class="lb">否</text></g>
+<g><path d="M652,524 L618,524 L618,246 L602,246" class="eg" marker-end="url(#arw)"/></g>
+<g><path d="M838,432 L884,432" class="eg" marker-end="url(#arw)"/><rect x="859.5" y="414" width="18" height="15" rx="4" class="lb-bg"/><text x="868.5" y="425" class="lb">是</text></g>
+<g><path d="M1100,432 L1140,432" class="eg" marker-end="url(#arw)"/></g>
+<g><path d="M1248,476 L1248,541 L499,541 L499,606" class="eg" marker-end="url(#arw)"/></g>
+<g><path d="M602,650 L652,650" class="eg" marker-end="url(#arw)"/></g>
+<g><path d="M747,598 L747,646 L992,646 L992,694" class="eg" marker-end="url(#arw)"/><rect x="754" y="633" width="18" height="15" rx="4" class="lb-bg"/><text x="763" y="644" class="lb">是</text></g>
+<g><path d="M992,694 L992,760 L992,760 L992,826" class="eg" marker-end="url(#arw)"/></g>
+<g><path d="M747,702 L747,764 L992,764 L992,826" class="eg eg-main" marker-end="url(#arw)"/><rect x="754" y="757" width="18" height="15" rx="4" class="lb-bg"/><text x="763" y="768" class="lb">否</text></g>
+<g><path d="M1100,878 L1140,878" class="eg" marker-end="url(#arw)"/></g>
+<g><path d="M1356,878 L1396,878" class="eg" marker-end="url(#arw)"/><rect x="1367" y="860" width="18" height="15" rx="4" class="lb-bg"/><text x="1376" y="871" class="lb">是</text></g>
+<g><path d="M1504,830 L1504,766 L1504,766 L1504,702" class="eg" marker-end="url(#arw)"/></g>
+<g><path d="M992,826 L992,764 L1504,764 L1504,702" class="eg" marker-end="url(#arw)"/></g>
+<g><path d="M1612,654 L1640,654" class="eg" marker-end="url(#arw)"/></g>
+<g><path d="M1748,702 L1748,711 L1748,711 L1748,720" class="eg eg-dash eg-warn" marker-end="url(#arwW)"/></g>
+<g><path d="M1748,702 L1748,882 L1748,882 L1748,1062" class="eg" marker-end="url(#arw)"/></g>
+<g><path d="M1640,1108 L1612,1108" class="eg" marker-end="url(#arw)"/></g>
+<g><path d="M1396,1108 L1356,1108" class="eg" marker-end="url(#arw)"/><rect x="1367" y="1090" width="18" height="15" rx="4" class="lb-bg"/><text x="1376" y="1101" class="lb">是</text></g>
+<g><path d="M1140,1108 L1100,1108" class="eg" marker-end="url(#arw)"/></g>
+<g><path d="M884,1108 L602,1108" class="eg" marker-end="url(#arw)"/></g>
+<g><path d="M396,1108 L354,1108" class="eg" marker-end="url(#arw)"/></g>
+<g><path d="M1582,1058 L1582,1040 L1634,1040 L1634,1074 L1610,1074" class="eg" marker-end="url(#arw)"/><rect x="1617" y="1090" width="18" height="15" rx="4" class="lb-bg"/><text x="1626" y="1101" class="lb">否→退回补</text></g>
+<g><rect x="204" y="212" width="150" height="68" rx="34" class="nd-start"/><text x="279" y="242.5" class="tx-t-d" font-size="13" style="text-anchor:middle">学期实习开始</text><text x="279" y="261.5" class="tx-sd" style="text-anchor:middle">600 名学生</text><g><rect x="315.2" y="213.5" width="30.799999999999997" height="15" rx="7.5" class="chip"/><text x="330.6" y="225" class="chip-t" style="text-anchor:middle">f00</text></g></g>
+<g><rect x="396" y="206" width="206" height="80" rx="8" class="nd-s"/><text x="499" y="236.5" class="tx-t" font-size="13" style="text-anchor:middle">① 双周轻量提交</text><text x="499" y="255.5" class="tx-s" style="text-anchor:middle">任务例子 + 行为实例</text><text x="499" y="267.5" class="tx-s" style="text-anchor:middle">替代长问卷</text><g><rect x="563.2" y="207.5" width="30.799999999999997" height="15" rx="7.5" class="chip"/><text x="578.6" y="219" class="chip-t" style="text-anchor:middle">f50</text></g></g>
+<g><rect x="642" y="206" width="206" height="80" rx="8" class="nd-s"/><text x="745" y="242.5" class="tx-t" font-size="13" style="text-anchor:middle">② 企业评分</text><text x="745" y="261.5" class="tx-s" style="text-anchor:middle">口径按校准版本登记</text><g><rect x="775.6" y="207.5" width="64.4" height="15" rx="7.5" class="chip"/><text x="807.8" y="219" class="chip-t" style="text-anchor:middle">f51 · f24</text></g></g>
+<g><rect x="396" y="386" width="206" height="92" rx="8" class="nd-ai"/><rect x="396" y="386" width="5" height="92" rx="2.5" class="ai-bar"/><text x="499" y="422.5" class="tx-t" font-size="13" style="text-anchor:middle">③ 评语结构化抽取</text><text x="499" y="441.5" class="tx-s" style="text-anchor:middle">岗位任务·场景·行为实例</text><text x="499" y="453.5" class="tx-s" style="text-anchor:middle">缺项当场标红回填</text><g><rect x="529.6" y="387.5" width="64.4" height="15" rx="7.5" class="chip"/><text x="561.8" y="399" class="chip-t" style="text-anchor:middle">f10 · f41</text></g></g>
+<g><polygon points="745,384 838,432 745,480 652,432" class="nd-d"/><text x="745" y="429" class="tx-t" font-size="12" style="text-anchor:middle">要素齐备？</text><text x="745" y="447" class="tx-s" style="text-anchor:middle">任务+实例+版本</text><g><rect x="765.6" y="385.5" width="64.4" height="15" rx="7.5" class="chip"/><text x="797.8" y="397" class="chip-t" style="text-anchor:middle">f10 · f41</text></g></g>
+<g><rect x="884" y="388" width="216" height="88" rx="8" class="nd-ai"/><rect x="884" y="388" width="5" height="88" rx="2.5" class="ai-bar"/><text x="992" y="422.5" class="tx-t" font-size="13" style="text-anchor:middle">④ 多源自动收拢</text><text x="992" y="441.5" class="tx-s" style="text-anchor:middle">微信/Excel/邮件归并</text><text x="992" y="453.5" class="tx-s" style="text-anchor:middle">附原文与版本</text><g><rect x="1027.6" y="389.5" width="64.4" height="15" rx="7.5" class="chip"/><text x="1059.8" y="401" class="chip-t" style="text-anchor:middle">f12 · f15</text></g></g>
+<g><rect x="1140" y="388" width="216" height="88" rx="8" class="nd-ai"/><rect x="1140" y="388" width="5" height="88" rx="2.5" class="ai-bar"/><text x="1248" y="422.5" class="tx-t" font-size="13" style="text-anchor:middle">⑤ 建议起草</text><text x="1248" y="441.5" class="tx-s" style="text-anchor:middle">事实 → 建议连原记录</text><text x="1248" y="453.5" class="tx-s" style="text-anchor:middle">不做判定</text><g><rect x="1283.6" y="389.5" width="64.4" height="15" rx="7.5" class="chip"/><text x="1315.8" y="401" class="chip-t" style="text-anchor:middle">f15 · f52</text></g></g>
+<g><rect x="652" y="498" width="186" height="52" rx="6" class="nd-pain"/><text x="745" y="519.5" class="tx-t" font-size="11" style="text-anchor:middle">退回补字段</text><text x="745" y="536.5" class="tx-s" style="text-anchor:middle">不让空值进流程</text><g><rect x="799.2" y="499.5" width="30.799999999999997" height="15" rx="7.5" class="chip"/><text x="814.6" y="511" class="chip-t" style="text-anchor:middle">f31</text></g></g>
+<g><rect x="396" y="606" width="206" height="88" rx="8" class="nd-s"/><text x="499" y="640.5" class="tx-t" font-size="13" style="text-anchor:middle">⑥ 教师确认与修订</text><text x="499" y="659.5" class="tx-s" style="text-anchor:middle">只审异常与判断类</text><text x="499" y="671.5" class="tx-s" style="text-anchor:middle">工时下降</text><g><rect x="529.6" y="607.5" width="64.4" height="15" rx="7.5" class="chip"/><text x="561.8" y="619" class="chip-t" style="text-anchor:middle">f15 · f12</text></g></g>
+<g><path d="M666,598 H828 L842,650 L828,702 H666 L652,650 Z" class="nd-g"/><text x="747" y="646" class="tx-t" font-size="12" style="text-anchor:middle">异常／争议？</text><text x="747" y="664" class="tx-s" style="text-anchor:middle">换岗·无实例·口径</text><g><rect x="803.2" y="599.5" width="30.799999999999997" height="15" rx="7.5" class="chip"/><text x="818.6" y="611" class="chip-t" style="text-anchor:middle">f44</text></g></g>
+<g><rect x="884" y="606" width="216" height="88" rx="8" class="nd-s"/><text x="992" y="639.5" class="tx-t" font-size="11" style="text-anchor:middle">⑦ 异常标记提报</text><text x="992" y="656.5" class="tx-s" style="text-anchor:middle">原记录链接·疑点类型</text><text x="992" y="668.5" class="tx-s" style="text-anchor:middle">·提报人</text><g><rect x="1061.2" y="607.5" width="30.799999999999997" height="15" rx="7.5" class="chip"/><text x="1076.6" y="619" class="chip-t" style="text-anchor:middle">f14</text></g></g>
+<g><path d="M898,826 H1086 L1100,878 L1086,930 H898 L884,878 Z" class="nd-g"/><text x="992" y="874" class="tx-t" font-size="12" style="text-anchor:middle">⑧ 教务核对闸门</text><text x="992" y="892" class="tx-s" style="text-anchor:middle">未确认不覆盖原记录</text><g><rect x="1061.2" y="827.5" width="30.799999999999997" height="15" rx="7.5" class="chip"/><text x="1076.6" y="839" class="chip-t" style="text-anchor:middle">f15</text></g></g>
+<g><path d="M1154,826 H1342 L1356,878 L1342,930 H1154 L1140,878 Z" class="nd-g"/><text x="1248" y="874" class="tx-t" font-size="12" style="text-anchor:middle">⑨ 口径争议？</text><text x="1248" y="892" class="tx-s" style="text-anchor:middle">记录使用版本</text><g><rect x="1317.2" y="827.5" width="30.799999999999997" height="15" rx="7.5" class="chip"/><text x="1332.6" y="839" class="chip-t" style="text-anchor:middle">f24</text></g></g>
+<g><rect x="1396" y="830" width="216" height="96" rx="8" class="nd-s"/><text x="1504" y="866" class="tx-t" font-size="11" style="text-anchor:middle">⑩ 教学质量负责人</text><text x="1504" y="881" class="tx-t" font-size="11" style="text-anchor:middle">裁定</text><text x="1504" y="898" class="tx-s" style="text-anchor:middle">人审·不可自动</text><g><rect x="1539.6" y="831.5" width="64.4" height="15" rx="7.5" class="chip"/><text x="1571.8" y="843" class="chip-t" style="text-anchor:middle">f24 · f44</text></g></g>
+<g><rect x="1396" y="606" width="216" height="96" rx="8" class="nd-s"/><text x="1504" y="636" class="tx-t" font-size="11" style="text-anchor:middle">⑪ 批次／导师</text><text x="1504" y="651" class="tx-t" font-size="11" style="text-anchor:middle">自动映射</text><text x="1504" y="668" class="tx-s" style="text-anchor:middle">三平台 ID 对齐</text><text x="1504" y="680" class="tx-s" style="text-anchor:middle">换岗即刷新</text><g><rect x="1539.6" y="607.5" width="64.4" height="15" rx="7.5" class="chip"/><text x="1571.8" y="619" class="chip-t" style="text-anchor:middle">f30 · f11</text></g></g>
+<g><rect x="1640" y="606" width="216" height="96" rx="8" class="nd-s"/><text x="1748" y="636" class="tx-t" font-size="11" style="text-anchor:middle">⑫ 汇总与完整率</text><text x="1748" y="651" class="tx-t" font-size="11" style="text-anchor:middle">看板</text><text x="1748" y="668" class="tx-s" style="text-anchor:middle">分母口径固定</text><text x="1748" y="680" class="tx-s" style="text-anchor:middle">目标 85%</text><g><rect x="1783.6" y="607.5" width="64.4" height="15" rx="7.5" class="chip"/><text x="1815.8" y="619" class="chip-t" style="text-anchor:middle">f00 · f53</text></g></g>
+<g><rect x="1640" y="720" width="216" height="56" rx="6" class="nd-pain"/><text x="1748" y="743" class="tx-t" font-size="10" style="text-anchor:middle">接口失败：只读快照</text><text x="1748" y="759" class="tx-s" style="text-anchor:middle">按业务编号去重补齐</text><g><rect x="1817.2" y="721.5" width="30.799999999999997" height="15" rx="7.5" class="chip"/><text x="1832.6" y="733" class="chip-t" style="text-anchor:middle">f35</text></g></g>
+<g><rect x="1640" y="1062" width="216" height="92" rx="8" class="nd-s"/><text x="1748" y="1097.5" class="tx-t" font-size="11" style="text-anchor:middle">⑬ 专业组评审</text><text x="1748" y="1114.5" class="tx-s" style="text-anchor:middle">30 条中 ≥24 条</text><text x="1748" y="1126.5" class="tx-s" style="text-anchor:middle">对得上课程才签字</text><g><rect x="1817.2" y="1063.5" width="30.799999999999997" height="15" rx="7.5" class="chip"/><text x="1832.6" y="1075" class="chip-t" style="text-anchor:middle">f42</text></g></g>
+<g><path d="M1410,1058 H1598 L1612,1108 L1598,1158 H1410 L1396,1108 Z" class="nd-g"/><text x="1504" y="1104" class="tx-t" font-size="12" style="text-anchor:middle">⑭ 结论落到课程？</text><text x="1504" y="1122" class="tx-s" style="text-anchor:middle">任务→能力点→动作</text><g><rect x="1573.2" y="1059.5" width="30.799999999999997" height="15" rx="7.5" class="chip"/><text x="1588.6" y="1071" class="chip-t" style="text-anchor:middle">f01</text></g></g>
+<g><rect x="1140" y="1062" width="216" height="92" rx="8" class="nd-s"/><text x="1248" y="1097" class="tx-t" font-size="10" style="text-anchor:middle">⑮ 课程动作下发</text><text x="1248" y="1113" class="tx-s" style="text-anchor:middle">责任主体明确</text><text x="1248" y="1125" class="tx-s" style="text-anchor:middle">进培养方案走审批</text><g><rect x="1283.6" y="1063.5" width="64.4" height="15" rx="7.5" class="chip"/><text x="1315.8" y="1075" class="chip-t" style="text-anchor:middle">f22 · f23</text></g></g>
+<g><rect x="884" y="1062" width="216" height="92" rx="8" class="nd-s"/><text x="992" y="1097.5" class="tx-t" font-size="11" style="text-anchor:middle">⑯ 每周复盘</text><text x="992" y="1114.5" class="tx-s" style="text-anchor:middle">误判与未解决问题</text><text x="992" y="1126.5" class="tx-s" style="text-anchor:middle">定改进负责人</text><g><rect x="1061.2" y="1063.5" width="30.799999999999997" height="15" rx="7.5" class="chip"/><text x="1076.6" y="1075" class="chip-t" style="text-anchor:middle">f55</text></g></g>
+<g><rect x="204" y="1062" width="150" height="92" rx="46" class="nd-end"/><text x="279" y="1103.5" class="tx-t-d" font-size="11" style="text-anchor:middle">规则更新</text><text x="279" y="1120.5" class="tx-sd" style="text-anchor:middle">复测后生效</text><g><rect x="315.2" y="1063.5" width="30.799999999999997" height="15" rx="7.5" class="chip"/><text x="330.6" y="1075" class="chip-t" style="text-anchor:middle">f55</text></g></g>
+<g><rect x="396" y="1062" width="206" height="92" rx="8" class="nd-s"/><text x="499" y="1103.5" class="tx-t" font-size="11" style="text-anchor:middle">⑰ 效果回看</text><text x="499" y="1120.5" class="tx-s" style="text-anchor:middle">完整率 + 可执行率</text><g><rect x="563.2" y="1063.5" width="30.799999999999997" height="15" rx="7.5" class="chip"/><text x="578.6" y="1075" class="chip-t" style="text-anchor:middle">f55</text></g></g>
+
+<text x="40" y="50" class="ttl">知行职业学院 · AI 数智化后实习反馈流程（To-Be）</text>
+<text x="40" y="76" class="stl">目标链路：双周结构化提交 → AI 收拢与起草 → 教师确认 → 教务核对闸门 → 专业组落课 → 每周复盘更新规则　|　共 17 步，5 道人工闸门全部保留</text>
+<text x="40" y="98" class="stl">绿色节点 = AI 承担（只做抽取、归并与起草，不判定、不打分）　·　红色六边形 = 人工闸门　·　依据 discovery-report.json（education-fNNN）</text>
+
+<g transform="translate(40, 112)">
+  <rect x="0" y="0" width="26" height="16" rx="4" fill="#EEF7F2" stroke="#1E8A63" stroke-width="1.5"/><rect x="0" y="0" width="4" height="16" rx="2" fill="#1E8A63"/>
+  <text x="34" y="13" class="lg">AI 能力</text>
+  <path d="M104,8 H152 L164,16 L152,24 H104 L92,16 Z" fill="#FDECEA" stroke="#B3271E" stroke-width="1.6" transform="translate(-2,-8)"/>
+  <text x="172" y="13" class="lg">人工闸门</text>
+  <rect x="258" y="0" width="26" height="16" rx="4" fill="#FFF6E5" stroke="#B4690E" stroke-dasharray="4 3"/>
+  <text x="292" y="13" class="lg">规则/兜底</text>
+</g>
+
+<g transform="translate(1460, 148)">
+  <rect x="0" y="0" width="462" height="96" rx="8" fill="#FFFFFF" stroke="#DDE3EC"/>
+  <text x="14" y="22" class="hn">解决的现状断点</text>
+  <text x="14" y="42" class="lg" style="font-size:11px">① 评语无行为实例（f10）→ ③ 抽取时强制补齐</text>
+  <text x="14" y="60" class="lg" style="font-size:11px">② 整理 10h/月（f12）→ ④ 多源自动归并</text>
+  <text x="14" y="78" class="lg" style="font-size:11px">③ 换岗旧导师（f11）→ ⑪ 换岗即刷新映射</text>
+  <text x="240" y="42" class="lg" style="font-size:11px">④ 建议落不到课程（f01）→ ⑭ 落课判定</text>
+  <text x="240" y="60" class="lg" style="font-size:11px">⑤ 完整率 54%（f00）→ ① 双周轻量提交</text>
+  <text x="240" y="78" class="lg" style="font-size:11px">⑥ 群聊补录（f14）→ ⑦ 结构化异常位</text>
+</g>
+</svg>

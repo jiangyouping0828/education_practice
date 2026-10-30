@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>实习管理与教学系统一页纸需求清单</title>
+<style>
+:root{
+  --color-primary:#1565C0;--color-heading:#1A237E;--color-text:#1B2430;--color-muted:#5A6474;
+  --color-border:#C9D5E4;--color-row-alt:#F4F8FC;--color-info-bg:#EAF2FB;--color-warn-bg:#FCF5E6;
+  --ff-body:"SimSun","Microsoft YaHei",serif;--ff-head:"Microsoft YaHei","SimHei",sans-serif;
+  --fs-body:11pt;--fs-small:10pt;--fs-tiny:9pt;
+  --spacing-1:3pt;--spacing-2:6pt;--spacing-3:9pt;--spacing-4:12pt;--spacing-5:16pt;--spacing-6:20pt;--spacing-8:26pt;
+}
+@page{ @bottom-center{ content:"第 " counter(page) " 页"; } }
+@page cover{ @bottom-center{ content:none; } }
+section[role="cover"]{ page:cover; }
+body{margin:0;color:var(--color-text);}
+.cover-band{font-family:var(--ff-head);text-align:center;padding-top:var(--spacing-5);}
+.cover-title{font-family:var(--ff-head);font-size:20pt;font-weight:bold;color:var(--color-heading);text-align:center;text-indent:0;margin:0 0 var(--spacing-2);}
+.cover-sub{font-family:var(--ff-body);font-size:var(--fs-small);color:var(--color-muted);text-align:center;text-indent:0;margin:0 0 var(--spacing-2);line-height:1.6;}
+p{font-family:var(--ff-body);font-size:var(--fs-small);text-align:justify;text-indent:2em;line-height:1.7;margin:0 0 var(--spacing-2);}
+h1{font-family:var(--ff-head);font-size:12.5pt;font-weight:bold;color:#FFFFFF;background-color:var(--color-heading);text-align:left;text-indent:0;padding:var(--spacing-1) var(--spacing-2);margin:var(--spacing-4) 0 var(--spacing-2);}
+table{width:100%;border-collapse:collapse;font-family:var(--ff-body);font-size:var(--fs-tiny);margin:0 0 var(--spacing-2);}
+th{font-family:var(--ff-head);font-size:var(--fs-tiny);font-weight:bold;color:#FFFFFF;background-color:var(--color-primary);text-align:left;padding:var(--spacing-1) var(--spacing-2);border:1px solid var(--color-border);}
+td{font-family:var(--ff-body);font-size:var(--fs-tiny);text-align:left;padding:var(--spacing-1) var(--spacing-2);border:1px solid var(--color-border);line-height:1.55;}
+tr.alt td{background-color:var(--color-row-alt);}
+li{font-family:var(--ff-body);font-size:var(--fs-tiny);line-height:1.6;margin-bottom:var(--spacing-1);text-align:justify;}
+ul,ol{margin:0 0 var(--spacing-2);padding-left:18pt;}
+.src-note{font-family:var(--ff-body);font-size:var(--fs-tiny);color:var(--color-muted);text-align:justify;text-indent:0;background-color:var(--color-warn-bg);border-left:3px solid #B4690E;padding:var(--spacing-2);margin:0 0 var(--spacing-3);line-height:1.6;}
+</style>
+</head>
+<body>
+
+<section role="cover">
+  <div class="cover-band">
+    <p class="cover-title">实习管理与教学系统 · 一页纸需求清单 v1</p>
+    <p class="cover-sub">校企合作 · 全校规模 · 混合部署 · AI 辅助整理不判定　|　2026-10-30</p>
+    <p class="cover-sub">决策依据：1C 过程+评价闭环 ｜ 2B 校企双组织 ｜ 3 移动+Web 并重 ｜ 4 挂钩成绩 ｜ 5B AI 辅助 ｜ 6 混合部署 ｜ 7 全校 ｜ 8 全新开发 ｜ 9 高频复杂换岗 ｜ 10 量化验收</p>
+  </div>
+</section>
+
+<section role="body" data-page-restart="1">
+<h1>一、架构基调（由决策直接推导）</h1>
+<table>
+  <thead><tr><th style="width:22%">决策</th><th>架构结论</th></tr></thead>
+  <tbody>
+    <tr><td>1C + 9 高频换岗</td><td>统一业务主键 + 事件模型是地基：「学生×批次×岗位×导师×时间段」做版本化关联（一等公民），评价、反馈、成绩全部挂在此键上——换岗即重算关联，杜绝"反馈发给旧导师"</td></tr>
+    <tr class="alt"><td>2B 校企合作</td><td>双租户数据隔离：企业侧与学校侧分租户，学生个体评价默认企业间不可见；数据归属规则（评价数据归校、任务数据归企）一期就写进权限模型</td></tr>
+    <tr><td>3 双端并重</td><td>一套 API、两套界面：现场端移动优先（弱网离线可用），管理端 Web 优先（批量操作）</td></tr>
+    <tr class="alt"><td>4 挂钩成绩</td><td>签核链 + 不可篡改留痕（哈希链）：评价改成绩必须经导师签核；成绩字段对 AI 与业务侧只读</td></tr>
+    <tr><td>5B AI 辅助</td><td>AI 只做抽取、归并、起草三件事，输出必须挂原记录，人工确认后才生效；模型网关统一计量</td></tr>
+    <tr class="alt"><td>6 混合部署</td><td>数据分级：学生个人评价/签核数据私有化；统计聚合与模型推理可用云；两端之间只同步去标识化数据</td></tr>
+    <tr><td>7 全校规模</td><td>模块化单体（不是微服务）：6 个模块边界清晰（批次岗位、反馈采集、评价签核、AI 服务、报表看板、系统管理），为未来拆分留缝</td></tr>
+    <tr class="alt"><td>8 全新开发</td><td>无存量包袱，事件模型与主键一次设计到位；预留标准导出接口应对未来集成</td></tr>
+  </tbody>
+</table>
+
+<h1>二、用户与角色</h1>
+<table>
+  <thead><tr><th style="width:24%">角色</th><th style="width:52%">核心操作</th><th>终端</th></tr></thead>
+  <tbody>
+    <tr><td>企业员工（现场导师）</td><td>双周提交任务例子 + 行为实例、确认交接</td><td>移动端（弱网可用）</td></tr>
+    <tr class="alt"><td>企业管理员</td><td>岗位发布、导师分派、交接验收</td><td>Web</td></tr>
+    <tr><td>学校指导教师</td><td>回访复核、确认 AI 草稿、异常提报</td><td>移动 + Web</td></tr>
+    <tr class="alt"><td>教务管理员</td><td>汇总、核对疑点、修复队列、映射维护</td><td>Web</td></tr>
+    <tr><td>专业组 / 教学质量负责人</td><td>落课评审签核、口径裁定、到期处置</td><td>Web</td></tr>
+    <tr class="alt"><td>系统管理员</td><td>租户、权限矩阵、规则版本</td><td>Web</td></tr>
+  </tbody>
+</table>
+
+<h1>三、功能范围（MoSCoW）</h1>
+<ul>
+  <li><b>Must（一期必须有）</b>：实习批次与岗位分配（版本化）；双周反馈提交（移动端离线暂存 + 待补状态 + 最后同步时间）；评价与签核链（挂成绩）；AI 评语结构化 + 建议起草（人工确认）；换岗 / 延期异常处理（即时重算导师关联）；成绩只读对接；双租户权限与数据隔离；指标看板（口径字段可配置）。</li>
+  <li><b>Should（一期尽量有）</b>：微信 / Excel / 邮件材料归并（业务编号主键）；人工修复队列（缺关键字段不猜值）；每周复盘与规则版本管理（复测通过才生效）。</li>
+  <li><b>Could（二期）</b>：岗位任务—课程能力对照表；学生申诉入口；消息提醒中心。</li>
+  <li><b>Won't（明确不做）</b>：AI 自动评分或给学生定性；成绩写回；对外 SaaS 平台化。</li>
+</ul>
+
+<h1>四、非功能需求（硬约束）</h1>
+<p style="font-size:var(--fs-tiny)">弱网离线可用、记录不丢且不假完成 ｜ 留痕可重建（批次 / 导师 / 版本 / 修正 / 签核人）且不含口令与非必要个人信息 ｜ 评价记录留存默认 90 天、到期人工确认删除或归档 ｜ 学生个体评价跨企业不可见 ｜ 能力推断必须有行为实例，敏感属性（家庭背景 / 性别）三层阻断 ｜ 越权访问 0 容忍。</p>
+
+<h1>五、验收指标（一期签字口径）</h1>
+<table>
+  <thead><tr><th style="width:20%">指标</th><th style="width:34%">目标</th><th>统计口径</th></tr></thead>
+  <tbody>
+    <tr><td>反馈完整率</td><td>≥85%（基线试点前实测冻结）</td><td>分母 / 周期 / 排除规则由业务负责人固定，冻结后不得中途修改</td></tr>
+    <tr class="alt"><td>建议可执行率</td><td>每批 30 条中 ≥24 条可对应课程 / 任务 / 负责人</td><td>专业组评审判定</td></tr>
+    <tr><td>AI 兜底召回</td><td>四类异常（换岗 / 无实例 / 口径不一致 / 依据缺失）100% 拦截转人工</td><td>评测集全量通过</td></tr>
+    <tr class="alt"><td>教师整理工时</td><td>较基线可观测下降</td><td>并行观测项</td></tr>
+    <tr><td>越权访问</td><td>0 次</td><td>审计日志</td></tr>
+  </tbody>
+</table>
+
+<h1>六、风险提示（开工前必须解决）</h1>
+<ol>
+  <li>主键与事件模型设计评审通过后才允许写业务代码（返工成本最高的部分）；</li>
+  <li>数据归属与隔离规则需校企双方书面确认；</li>
+  <li>量化指标的基线值（如完整率现状）需在试点前实测冻结，否则验收无锚点。</li>
+</ol>
+<p class="src-note">本清单为需求基线 v1：上述"架构基调"六项（主键事件模型、双租户、双端一 API、签核链、AI 边界、数据分级）任何一项变更均视为需求变更，需重新评审版本号。</p>
+</section>
+
+</body>
+</html>

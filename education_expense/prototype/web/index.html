@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>实习管理与教学助手</title>
+<style>
+  /* 全局：浅色主题，商务蓝主色 */
+  :root { --blue: #185FA5; --blue-bg: #E6F1FB; --line: #E2E5EA; --muted: #5F6B7A; --err: #A32D2D; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: "Microsoft YaHei", sans-serif; background: #F5F7FA; color: #222; }
+  .wrap { max-width: 760px; margin: 0 auto; height: 100vh; display: flex; flex-direction: column; }
+  header { padding: 14px 20px; background: #fff; border-bottom: 1px solid var(--line);
+           display: flex; justify-content: space-between; align-items: center; }
+  header h1 { font-size: 16px; margin: 0; }
+  #health { font-size: 12px; color: var(--muted); }
+  #msgs { flex: 1; overflow-y: auto; padding: 20px; }
+  .row { margin-bottom: 16px; display: flex; }
+  .row.me { justify-content: flex-end; }
+  .bubble { max-width: 78%; padding: 10px 14px; border-radius: 12px; line-height: 1.65;
+            font-size: 14px; white-space: pre-wrap; word-break: break-word; }
+  .me .bubble { background: var(--blue); color: #fff; border-bottom-right-radius: 4px; }
+  .bot .bubble { background: #fff; border: 1px solid var(--line); border-bottom-left-radius: 4px; }
+  /* 状态提示（正在检索制度…） */
+  .status { font-size: 12px; color: var(--muted); padding: 4px 2px; }
+  .status::before { content: ""; display: inline-block; width: 8px; height: 8px; margin-right: 6px;
+                    border-radius: 50%; background: var(--blue); animation: blink 1s infinite; }
+  @keyframes blink { 50% { opacity: .25; } }
+  /* 引用来源卡片 */
+  .sources { max-width: 78%; margin-top: 6px; font-size: 12px; }
+  .sources details { background: var(--blue-bg); border: 1px solid #C7DCF2; border-radius: 8px; padding: 6px 10px; }
+  .sources summary { cursor: pointer; color: var(--blue); }
+  .draft-btn { border:none; border-radius:6px; padding:6px 14px; font-size:12.5px;
+               cursor:pointer; margin-right:8px; }
+  .draft-btn.ok { background:#185FA5; color:#fff; }
+  .draft-btn.no { background:#F1EFE8; color:#444441; border:1px solid #B4B2A9; }
+  .draft-btn:disabled { opacity:.5; cursor:default; }
+  .src-item { margin: 8px 0; padding-left: 8px; border-left: 3px solid var(--blue); }
+  .src-item b { color: #0C447C; }
+  .src-item .sc { color: var(--muted); }
+  /* 错误条 */
+  .err { max-width: 78%; background: #FCEBEB; color: var(--err); border: 1px solid #F09595;
+         border-radius: 8px; padding: 8px 12px; font-size: 13px; }
+  /* 输入区 */
+  footer { display: flex; gap: 10px; padding: 14px 20px; background: #fff; border-top: 1px solid var(--line); }
+  #input { flex: 1; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px;
+           font-size: 14px; resize: none; height: 44px; outline: none; }
+  #input:focus { border-color: var(--blue); }
+  #send { width: 84px; border: none; border-radius: 8px; background: var(--blue); color: #fff;
+          font-size: 14px; cursor: pointer; }
+  #send:disabled { background: #A9C4E0; cursor: not-allowed; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>实习管理与教学助手</h1>
+    <span id="health">正在检查服务状态…</span>
+  </header>
+  <div id="msgs"></div>
+  <footer>
+    <textarea id="input" placeholder="输入实习制度相关的问题，如：换岗之后考核归谁管？"></textarea>
+    <button id="send">发送</button>
+  </footer>
+</div>
+
+<script>
+/* ================= 全局状态 ================= */
+const msgsEl = document.getElementById('msgs');
+const inputEl = document.getElementById('input');
+const sendBtn = document.getElementById('send');
+let sessionId = localStorage.getItem('session_id') || null;  // 会话存本地，刷新不丢
+let busy = false;
+
+/* ================= 启动：健康检查 + 恢复历史 ================= */
+(async function init() {
+  try {
+    const h = await (await fetch('/api/health')).json();
+    document.getElementById('health').textContent =
+      `知识库 ${h.kb_chunks} 片 · ${h.retrieval_mode === 'hybrid' ? '混合检索' : '关键词检索'} · 模型 ${h.chat_model}`;
+  } catch { document.getElementById('health').textContent = '服务连接失败'; }
+
+  if (sessionId) {
+    const r = await fetch(`/api/sessions/${sessionId}/messages`);
+    if (r.ok) {
+      const data = await r.json();
+      for (const m of data.messages) {           // 恢复历史：用户消息与带引用的助手消息
+        addBubble(m.role === 'user' ? 'me' : 'bot', m.content);
+        if (m.citations) addSources(m.citations);
+      }
+    } else { localStorage.removeItem('session_id'); sessionId = null; }
+  }
+  msgsEl.scrollTop = msgsEl.scrollHeight;
+})();
+
+/* ================= 渲染辅助 ================= */
+function addBubble(who, text) {
+  const row = document.createElement('div');
+  row.className = 'row ' + who;
+  row.innerHTML = `<div class="bubble"></div>`;
+  row.querySelector('.bubble').textContent = text;
+  msgsEl.appendChild(row);
+  msgsEl.scrollTop = msgsEl.scrollHeight;
+  return row.querySelector('.bubble');           // 返回气泡节点供流式追加
+}
+function addStatus(text) {                       // "正在检索制度…" 提示行
+  const d = document.createElement('div');
+  d.className = 'status'; d.textContent = text;
+  msgsEl.appendChild(d); msgsEl.scrollTop = msgsEl.scrollHeight;
+  return d;
+}
+function addSources(sources) {                   // 引用来源：文件名 + 章节 + 摘录
+  const d = document.createElement('div');
+  d.className = 'sources';
+  const items = sources.map(s =>
+    `<div class="src-item"><b>片段${s.rank}｜${s.document}·${s.section || '未分节'}</b> ` +
+    `<span class="sc">相关度 ${s.score}</span><br>${s.excerpt}…</div>`).join('');
+  d.innerHTML = `<details><summary>引用来源（${sources.length} 条制度条文）</summary>${items}</details>`;
+  msgsEl.appendChild(d); msgsEl.scrollTop = msgsEl.scrollHeight;
+}
+function addApplyCard(c) {                       // 申请单卡片：创建提交成功后展示
+  const d = document.createElement('div');
+  d.className = 'sources';
+  const rows = Object.entries(c.payload || {}).map(([k, v]) =>
+    `<div class="src-item"><b>${k}</b>：${v}</div>`).join('');
+  d.innerHTML = `<details open><summary>📋 ${c.apply_type} 已提交（单号 ${c.apply_id}）</summary>` +
+    `<div class="src-item"><b>状态</b>：${c.status}　<b>审批路径</b>：${c.approval_route}</div>` +
+    `<div class="src-item"><b>制度依据</b>：${c.source}</div>${rows}</details>`;
+  msgsEl.appendChild(d); msgsEl.scrollTop = msgsEl.scrollHeight;
+}
+function addDraftCard(c) {                       // 草稿确认卡片：强制中断，等学生点确认
+  const d = document.createElement('div');
+  d.className = 'sources';
+  const rows = Object.entries(c.payload || {}).map(([k, v]) =>
+    `<div class="src-item"><b>${k}</b>：${v}</div>`).join('');
+  d.innerHTML = `<details open><summary>✍️ ${c.apply_type}申报草稿（单号 ${c.draft_id}）——等待你的确认</summary>` +
+    rows +
+    `<div class="src-item"><b>审批路径</b>：${c.approval_route}（依据：${c.source}）</div>` +
+    `<div style="margin-top:8px">` +
+    `<button class="draft-btn ok" data-id="${c.draft_id}">确认提交</button>` +
+    `<button class="draft-btn no" data-id="${c.draft_id}">取消</button></div></details>`;
+  msgsEl.appendChild(d); msgsEl.scrollTop = msgsEl.scrollHeight;
+  // 确认/取消：直接调服务端接口（不经模型——服务端才是提交的唯一消费点）
+  d.querySelectorAll('.draft-btn').forEach(btn => btn.addEventListener('click', async () => {
+    const act = btn.classList.contains('ok') ? 'confirm' : 'cancel';
+    const box = btn.closest('details');
+    btn.parentElement.querySelectorAll('button').forEach(b => { b.disabled = true; });
+    try {
+      const r = await fetch(`/api/draft/${c.draft_id}/${act}`, { method: 'POST' });
+      const j = await r.json();
+      const note = document.createElement('div');
+      note.className = 'src-item';
+      note.style.fontWeight = '500';
+      if (j.ok) {
+        note.textContent = act === 'confirm'
+          ? `✅ 已提交，审批路径：${j.approval_route}`
+          : '已取消，可重新发起';
+        box.querySelector('summary').textContent =
+          `📋 ${c.apply_type}（单号 ${c.draft_id}）——${act === 'confirm' ? '已提交' : '已取消'}`;
+      } else {
+        note.textContent = `操作失败：${j.message || j.code}`;
+        btn.parentElement.querySelectorAll('button').forEach(b => { b.disabled = false; });
+      }
+      box.appendChild(note);
+    } catch (e) {
+      btn.parentElement.querySelectorAll('button').forEach(b => { b.disabled = false; });
+      addError('网络异常：' + e.message);
+    }
+  }));
+}
+function addError(msg) {
+  const d = document.createElement('div');
+  d.className = 'err'; d.textContent = msg;
+  msgsEl.appendChild(d); msgsEl.scrollTop = msgsEl.scrollHeight;
+}
+
+/* ================= 主流程：POST + 手动解析 SSE ================= */
+async function ask() {
+  const q = inputEl.value.trim();
+  if (!q || busy) return;
+  busy = true; sendBtn.disabled = true; inputEl.value = '';
+  addBubble('me', q);
+
+  // 打字机缓冲：delta 到达先进缓冲区，定时器匀速上屏，避免逐字抖动
+  let bubble = null, buf = '', timer = null;
+  const flush = () => {                           // 把缓冲内容画到气泡上
+    if (!bubble && buf) bubble = addBubble('bot', '');
+    if (bubble && buf) {
+      bubble.textContent += buf; buf = '';
+      msgsEl.scrollTop = msgsEl.scrollHeight;
+    }
+  };
+
+  try {
+    const resp = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ session_id: sessionId, question: q }),
+    });
+
+    if (!resp.ok) {                               // 流开始前的错误：HTTP 状态码 + JSON
+      const e = await resp.json().catch(() => ({ message: '请求失败' }));
+      addError(e.message || '请求失败'); return;
+    }
+
+    // 解析 SSE 流：按空行分帧，取 event 与 data 两行
+    const reader = resp.body.getReader();
+    const dec = new TextDecoder();
+    let carry = '';
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      carry += dec.decode(value, { stream: true });
+      const frames = carry.split('\n\n');
+      carry = frames.pop();                       // 最后一段可能不完整，留给下一轮
+      for (const f of frames) handleFrame(f);
+    }
+    timer && clearInterval(timer); flush();
+  } catch (e) {
+    timer && clearInterval(timer); flush();
+    addError('网络异常：' + e.message);
+  } finally {
+    busy = false; sendBtn.disabled = false; inputEl.focus();
+  }
+
+  function handleFrame(frame) {
+    let ev = 'message', data = '';
+    for (const line of frame.split('\n')) {
+      if (line.startsWith('event:')) ev = line.slice(6).trim();
+      else if (line.startsWith('data:')) data += line.slice(5).trim();
+    }
+    if (!data) return;
+    const d = JSON.parse(data);
+    if (ev === 'status') {
+      // 只显示状态行，不进对话流：检索中 → 生成中
+      if (ask._st) ask._st.textContent = d.message;
+      else ask._st = addStatus(d.message);
+    } else if (ev === 'sources') {
+      ask._st && ask._st.remove(), ask._st = null;   // 状态行功成身退
+      addSources(d.sources);
+    } else if (ev === 'apply') {
+      addApplyCard(d);                               // 申请单卡片
+    } else if (ev === 'draft_review') {
+      addDraftCard(d);                               // 草稿确认卡片（强制中断点）
+    } else if (ev === 'delta') {
+      buf += d.content;                              // 进缓冲区，由定时器匀速上屏
+      if (!timer) timer = setInterval(flush, 20);
+    } else if (ev === 'done') {
+      ask._st && ask._st.remove(), ask._st = null;
+      sessionId = d.session_id;                      // 记住会话，刷新后可恢复
+      localStorage.setItem('session_id', sessionId);
+    } else if (ev === 'error') {
+      ask._st && ask._st.remove(), ask._st = null;
+      timer && clearInterval(timer); flush();
+      addError(d.message + '（' + d.code + '）');
+    }
+  }
+}
+
+/* ================= 交互绑定 ================= */
+sendBtn.addEventListener('click', ask);
+inputEl.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); ask(); }
+});
+</script>
+</body>
+</html>

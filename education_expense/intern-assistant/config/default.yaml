@@ -1,0 +1,14 @@
+# 非机密默认参数（机密一律放 .env，本文件可入库）
+defaults:
+  top_k: 3            # 检索条数
+  chunk_size: 500     # 切片字数
+  vector_weight: 0.6  # 混合检索：向量权重
+  bm25_weight: 0.4    # 混合检索：BM25 权重
+
+server:
+  host: 127.0.0.1
+  port: 8000
+
+agent:
+  max_rounds: 5       # Harness 最大执行轮数
+  ticket_ttl_seconds: 600  # 申请票据有效期（10 分钟）

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>现状流程痛点诊断 · 知行职业学院实习反馈</title>
+<style>
+  @page { size: A4; margin: 16mm 15mm 14mm 15mm; }
+  :root{
+    --c-ink:#16202E; --c-ink2:#3C4A5C; --c-mute:#65717F; --c-line:#DCE3EC;
+    --c-brand:#1565C0; --c-brand-dk:#1A237E; --c-pale:#F5F8FC;
+    --c-red:#B3271E; --c-red-bg:#FBF0EE; --c-amber:#8A5A00; --c-amber-bg:#FCF5E6;
+    --c-green:#1E6B4F; --c-green-bg:#EEF7F2; --c-blue:#12508F;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Microsoft YaHei","PingFang SC","Noto Sans SC",sans-serif;color:var(--c-ink);font-size:10pt;line-height:1.62}
+  h1{font-size:19pt;margin:0 0 6pt;color:var(--c-brand-dk);letter-spacing:.5px}
+  h2{font-size:13pt;margin:20pt 0 8pt;color:var(--c-brand-dk);padding-left:8pt;border-left:4px solid var(--c-brand)}
+  h3{font-size:10.8pt;margin:12pt 0 5pt;color:var(--c-ink)}
+  p{margin:0 0 7pt;text-align:justify}
+  .lede{color:var(--c-ink2);font-size:10pt}
+  .meta{color:var(--c-mute);font-size:8.6pt;margin:0 0 12pt;padding-bottom:10pt;border-bottom:1px solid var(--c-line)}
+  table{width:100%;border-collapse:collapse;font-size:8.8pt;margin:6pt 0 10pt}
+  th{background:var(--c-brand-dk);color:#fff;font-weight:600;text-align:left;padding:5pt 6pt;font-size:8.6pt;letter-spacing:.2px}
+  td{padding:5pt 6pt;border-bottom:1px solid var(--c-line);vertical-align:top;line-height:1.5}
+  tr:nth-child(even) td{background:var(--c-pale)}
+  .tag{display:inline-block;padding:0 5pt;border-radius:3px;font-size:7.8pt;font-weight:700;white-space:nowrap}
+  .t-red{background:var(--c-red-bg);color:var(--c-red);border:1px solid #E9C6C1}
+  .t-amber{background:var(--c-amber-bg);color:var(--c-amber);border:1px solid #EAD7AE}
+  .t-green{background:var(--c-green-bg);color:var(--c-green);border:1px solid #C5DFD3}
+  .t-blue{background:#EAF2FB;color:var(--c-blue);border:1px solid #C3D8EF}
+  .fact{font-family:Consolas,monospace;font-size:8pt;color:var(--c-blue)}
+  .box{background:var(--c-pale);border:1px solid var(--c-line);border-radius:4px;padding:8pt 10pt;margin:8pt 0}
+  .box-warn{background:var(--c-red-bg);border:1px solid #E9C6C1;border-left:4px solid var(--c-red);border-radius:4px;padding:8pt 10pt;margin:8pt 0}
+  .box-note{background:var(--c-amber-bg);border:1px solid #EAD7AE;border-left:4px solid var(--c-amber);border-radius:4px;padding:8pt 10pt;margin:8pt 0;font-size:9.2pt}
+  .kpi{display:flex;gap:8pt;margin:8pt 0 12pt}
+  .kpi div{flex:1;border:1px solid var(--c-line);border-top:3px solid var(--c-brand);border-radius:3px;padding:7pt 8pt;background:#fff}
+  .kpi b{display:block;font-size:15pt;color:var(--c-brand-dk);line-height:1.2}
+  .kpi span{font-size:8.2pt;color:var(--c-mute);display:block;margin-top:2pt}
+  ol,ul{margin:0 0 8pt;padding-left:16pt}
+  li{margin-bottom:3pt}
+  .num{font-weight:700;color:var(--c-brand)}
+  .cap{font-size:8.2pt;color:var(--c-mute);margin:-4pt 0 10pt}
+  .footer{font-size:8pt;color:var(--c-mute);border-top:1px solid var(--c-line);padding-top:6pt;margin-top:14pt}
+  .avoid{page-break-inside:avoid}
+  .pb{page-break-before:always}
+</style>
+</head>
+<body>
+
+<h1>实习反馈现状流程 · 痛点诊断</h1>
+<p class="lede">基于 <b>discovery-report.json</b> 访谈事实（education-fNNN）与已绘制的 As-Is 流程图，逐环节定位时间与成本消耗、人工审核节点、数据隐私风险，并标明哪些结论有事实支撑、哪些仍是待验证假设。</p>
+<p class="meta">对象：知行职业学院 · 每学期 600 名学生实习 · 试点范围机电专业 5 家企业　|　编制时间：2026-10-23　|　证据基础：35 条合成事实，覆盖率 97%（36 项中 35 项）</p>
+
+<h2>一、结论先行</h2>
+<div class="kpi avoid">
+  <div><b>≈10 h/月/人</b><span>教师单一人工整理工时（f12）</span></div>
+  <div><b>≈20 h/月</b><span>每专业可观测的整理成本基准（2 名教师）</span></div>
+  <div><b>54% → 85%</b><span>反馈完整率现状与目标缺口（f00）</span></div>
+  <div><b>5 处</b><span>必须有真人签核的节点（f15·f22·f24·f44·f52）</span></div>
+</div>
+<p><b>三段式判断：</b></p>
+<ol>
+  <li><b>时间最长的不是任何一个"系统步骤"，而是 ③ 反馈收拢整理</b>——它是把微信／Excel／邮件里的碎片手工搬运归类，每月约 10 小时/人，且"基本不产出教学判断"（f12）。流程图上其余步骤本身耗时并未被访谈量化，<b>不能凭图臆断</b>。</li>
+  <li><b>真正吃掉预算的不是软件，而是人工复核与返工</b>：12 万元试点预算明确要扣除接口、培训、复核、维护四类成本（f03），其中复核成本随覆盖判定复核量线性变化，而返工的直接诱因是 换岗后仍关联旧导师（f11）与 群聊/个人表补录（f14）。</li>
+  <li><b>人工审核不是"越多越稳"，而是有明确边界的 5 道闸门</b>：成绩与培养方案、评分口径争议、异常转人工、最终评价定性、专业组落课签核。这 5 道闸门在现状里全部由真人承担，任何 AI 化设计都不能替代它们（f22·f24·f44·f52·f42）。</li>
+</ol>
+
+<h2>二、时间维度：按环节拆解</h2>
+<p>以下只列访谈中<b>被明确表述</b>的时间信息；访谈未量化的环节标注"未量化"，不做推测。周期口径按 18 周学期（约 4.5 个月）折算，用于横向估算量级。</p>
+<table>
+<thead><tr><th style="width:17%">流程环节</th><th style="width:11%">责任方</th><th style="width:15%">时间成本</th><th style="width:12%">是否有事实支撑</th><th>说明</th></tr></thead>
+<tbody>
+<tr><td><b>③ 反馈收拢整理</b></td><td>实习指导教师</td><td><b>≈10 h / 月 / 人</b></td><td><span class="tag t-green">已量化</span></td><td>整理微信、Excel、邮件多份来源（<span class="fact">f12</span>）。按每专业 2 名教师、4.5 个月学期折算 ≈ <b>90 人时/学期</b>；若扩至全校规模，这是唯一具备线性放大效应的成本项。</td></tr>
+<tr><td>① 企业评分与评语</td><td>企业实习导师</td><td>每两周 1 次提交任务例子</td><td><span class="tag t-green">已量化（频率）</span></td><td>企业导师愿按双周节奏提交具体任务例子；长问卷会拖到学期结束才填（<span class="fact">f50</span>）。<b>单次耗时未量化。</b></td></tr>
+<tr><td>② 教师回访与复核</td><td>实习指导教师</td><td>未量化</td><td><span class="tag t-red">未量化</span></td><td>现状需逐条追问"对应哪个任务、什么场景、有没有具体事例"（<span class="fact">f10</span>）。追问轮次取决于企业评语质量，因此这部分工时应视为 ③ 的上游放大器。</td></tr>
+<tr><td>④→⑤ 提交与核对</td><td>教务管理员</td><td>未量化（逐项核对）</td><td><span class="tag t-amber">部分</span></td><td>分派异常须写明处理人、截止时间与退回原因，缺一项就退回补全（<span class="fact">f25</span>）——<b>退回即返工</b>，是隐性时间成本。</td></tr>
+<tr><td>⑥ 教务汇总</td><td>教务管理员</td><td>未量化（覆盖缺口显著）</td><td><span class="tag t-amber">部分</span></td><td>完整率仅 54%、目标 85%（<span class="fact">f00</span>）。缺口需靠催补与二次收集弥补，但催补工时未被记录。</td></tr>
+<tr><td>⑦ 批次／导师映射抽检</td><td>教务侧</td><td>未量化（返工量大）</td><td><span class="tag t-amber">定性</span></td><td>换岗/延期后系统仍关联旧导师，教师须"回头核对是谁在带、哪段评价对应哪段岗位"（<span class="fact">f11</span>），访谈原话为"返工量不小"。</td></tr>
+<tr><td>⑧ 专业组评审</td><td>教学质量负责人</td><td>每轮审阅 30 条建议</td><td><span class="tag t-green">已量化（批量）</span></td><td>至少 24 条须可对应课程、任务、改进负责人，对不上不签字（<span class="fact">f42</span>）。<b>单条审阅耗时未量化。</b></td></tr>
+<tr><td>⑨→⑪ 落到课程与回看</td><td>专业组／课程侧</td><td>未量化</td><td><span class="tag t-red">未量化</span></td><td>访谈中"转换动作落在教师还是教务"尚未核实（<span class="fact">f01</span> 转换链缺责任主体），因此这一步连工时归属都无法确定。</td></tr>
+</tbody>
+</table>
+<p class="cap">口径说明：18 周学期 ≈ 4.5 个月；"人时/学期"= 10 h × 4.5 × 教师人数，仅为量级估算，非实测值。</p>
+
+<h2>三、成本维度：钱花在哪</h2>
+<p>预算事实只有一条硬口径：<b>试点预算 12 万元，须先扣除接口、培训、复核、维护四类成本；既有系统采购不纳入节省额</b>（<span class="fact">f03</span>）。四类成本的具体分摊比例访谈中<b>未核实</b>，因此下表按"驱动机制"排序，而不是按金额排序——金额排序需要秦芮与傅景补数据后才能定。</p>
+<table>
+<thead><tr><th style="width:16%">成本类型</th><th style="width:14%">对应流程环节</th><th style="width:13%">驱动机制</th><th style="width:11%">性质</th><th>为什么它可能最贵</th></tr></thead>
+<tbody>
+<tr><td><b>复核成本</b></td><td>② ⑤ ⑦ ⑧</td><td>随复核量线性增长，且随覆盖口径放大</td><td><span class="tag t-amber">经常性</span></td><td>验收口径已定为"5 家企业反馈都能被转换覆盖"，<b>样本里只要有一类反馈无法转换，草案就不算通过</b>（f01 相关讨论）。每一条不达标都要进人工复核，复核量直接决定这类成本上限。访谈明确"复核成本是否随覆盖判定复核量变化，取决于傅景那边的复核方式"——<b>尚待确认</b>。</td></tr>
+<tr><td><b>返工成本（隐性）</b></td><td>③ ⑦</td><td>错误映射触发全链重做</td><td><span class="tag t-amber">经常性</span></td><td>换岗后反馈发给错误的人（<span class="fact">f11</span>）→ 重新核对岗位段与评价段；群聊补录的原因未结构化（<span class="fact">f14</span>）→ 复核时只能看到结论、看不到依据，反复问询。这类成本不进预算表，但吃掉教师工时。</td></tr>
+<tr><td><b>接口成本</b></td><td>⑥ ⑦</td><td>一次性，但受平台数量约束</td><td><span class="tag t-blue">一次性</span></td><td>学籍、实习、课程平台各用一套 ID（<span class="fact">f30</span>），且接口侧<b>只开放只读批量导出，成绩写回不在范围</b>（<span class="fact">f32</span>）——范围被压缩反而降低了一次性投入，但也意味着不能靠写回自动化省人工。</td></tr>
+<tr><td><b>培训成本</b></td><td>① ② ③</td><td>一次性，按人头</td><td><span class="tag t-blue">一次性</span></td><td>现场使用现有终端、不额外配设备，也不能要求一线重复登录多个系统（<span class="fact">f13</span>），培训需贴合现有操作习惯，否则退回纸面流程。</td></tr>
+<tr><td><b>维护成本</b></td><td>全链</td><td>随试点周期走</td><td><span class="tag t-amber">经常性</span></td><td>数据每两周刷新一次、原文按版本同步、超一周标"待刷新"（<span class="fact">f34</span>）；接口失败要保留只读快照并按业务编号去重补齐（<span class="fact">f35</span>）——这些是持续性运维动作。</td></tr>
+</tbody>
+</table>
+<div class="box-note">
+<b>成本结论（可执行）：</b>若只能压缩一项，应压 <b>复核量</b> 而不是压 接口/培训 这类一次性投入。压复核量最有效的手段不是"少审"，而是 <b>前置把评语结构化成"岗位任务 + 行为实例"</b>（f10·f41），让不该进复核队列的记录在源头就被拦下。这也是"复核成本"与"完整率 85%"两个目标唯一能同时改善的杠杆。
+</div>
+
+<h2>四、必须人工审核的 5 道闸门</h2>
+<p>以下节点在访谈中被明确表述为"不能由系统自动落定"，属于硬约束，AI 化设计必须绕行而非替代。</p>
+<table>
+<thead><tr><th style="width:4%">#</th><th style="width:15%">审核节点</th><th style="width:12%">审核人</th><th style="width:20%">审什么</th><th style="width:16%">不可自动化的原因</th><th>事实</th></tr></thead>
+<tbody>
+<tr><td class="num">1</td><td><b>成绩与培养方案变更</b></td><td>教务委员会</td><td>培养方案变更审批；学生成绩</td><td>模型不能决定学生成绩，变更培养方案必须走教务委员会审批，"这是硬约束，不是流程偏好"</td><td><span class="fact">f22</span></td></tr>
+<tr><td class="num">2</td><td><b>评分口径争议裁定</b></td><td>教学质量负责人</td><td>换岗／无行为实例／口径不一致产生的争议</td><td>规则由业务负责人维护并保存生效日期与适用范围，争议需记录使用版本后由教学质量负责人确认；<b>不能由系统自动落定</b></td><td><span class="fact">f24</span></td></tr>
+<tr><td class="num">3</td><td><b>异常核对（复核闸）</b></td><td>教务管理员</td><td>换岗、无行为实例、口径不一致的疑点</td><td><b>未经确认的结果不能覆盖原记录</b>；发现错误只能标疑点、附原记录指向，不得直接改原评价</td><td><span class="fact">f15</span></td></tr>
+<tr><td class="num">4</td><td><b>兜底转人工确认</b></td><td>接手人（林亦舟／唐映秋，分工待核实）</td><td>四类触发：换岗、无行为实例、口径不一致、依据缺失或系统不可用</td><td>出现任一类，<b>自动建议必须停</b>；转人工须同时标明 停止原因 + 接手人 + 人工确认时间，缺一项不认</td><td><span class="fact">f44</span></td></tr>
+<tr><td class="num">5</td><td><b>最终评价定性</b></td><td>企业实习导师</td><td>学生评价结论</td><td>AI 只能整理观察事实与建议，<b>最终评价必须由导师确认，不能自动给学生定性</b></td><td><span class="fact">f52</span></td></tr>
+</tbody>
+</table>
+<p>另有两处属于<b>签字式审核</b>（非逐条审核，但缺签字流程就走不下去）：</p>
+<ul>
+<li><b>专业组落课签核</b>：审阅 30 条建议，至少 24 条可对应课程、任务、改进负责人，否则不签字（<span class="fact">f42</span>）。这是流程图中判定框「结论落到具体课程？」的人工答案来源。</li>
+<li><b>交接接手人确认</b>：交接须带学生批次、导师身份、岗位任务与企业反馈实例、当前版本和未解决事项，<b>接手人明确确认后才结束本岗待办；发送消息不等于责任已转移</b>（<span class="fact">f23</span>）。这条直接否定"在群里说一声就算交接完"的现状做法。</li>
+</ul>
+<div class="box-warn">
+<b>现状风险：</b>第 3 道闸门在现实中常被绕过——同事"先在群聊或个人表补说明，再回系统补录"（<span class="fact">f14</span>），而关键原因没有作为结构化字段随业务交接。结果是：<b>闸门还在，但过闸的依据丢了</b>，复核时只能看到结论、看不到它为什么成立。
+</div>
+
+<h2>五、数据隐私必须关注的 5 个点</h2>
+<table>
+<thead><tr><th style="width:4%">#</th><th style="width:16%">风险点</th><th style="width:14%">触发环节</th><th style="width:11%">风险等级</th><th>要求与依据</th></tr></thead>
+<tbody>
+<tr><td class="num">1</td><td><b>跨企业可见性越界</b></td><td>① ⑤ ⑧</td><td><span class="tag t-red">高</span></td><td>学生个人评价必须限制访问范围，<b>不能向其他企业公开个体记录</b>；谁要扩大可见范围须先过教学质量负责人（<span class="fact">f40</span>）。当前评审材料在多部门流转，此边界最易被"为了对齐口径"突破。</td></tr>
+<tr><td class="num">2</td><td><b>敏感属性推断</b></td><td>② ③ ④（AI 整理环节）</td><td><span class="tag t-red">高</span></td><td>能力推断<b>必须有行为实例</b>支撑，不得以家庭背景、性别等信息解释能力；若 AI 生成此类推断，不予签字放行（<span class="fact">f41</span>）。这是对模型输出内容的实质性限制，不只是访问控制。</td></tr>
+<tr><td class="num">3</td><td><b>留存期限与到期处理</b></td><td>⑥ 归档</td><td><span class="tag t-amber">中</span></td><td>本轮试点评价记录<b>暂留 90 天</b>，到期由教学质量负责人确认删除或归档；<b>真实组织的留存期限尚未核实，不能拿试点口径当制度用</b>（<span class="fact">f43</span>）。</td></tr>
+<tr><td class="num">4</td><td><b>审核日志的粒度与可见范围</b></td><td>全链留痕</td><td><span class="tag t-amber">中</span></td><td>日志须能重建当次处理：批次、导师身份、岗位任务与企业反馈实例版本、建议内容、人工修正、签核人；<b>不记录口令或非必要个人信息</b>（<span class="fact">f45</span>）。但"日志谁能看、看到什么粒度"尚未定，属待验证假设。</td></tr>
+<tr><td class="num">5</td><td><b>补录路径绕开留痕</b></td><td>③ ⑤</td><td><span class="tag t-amber">中</span></td><td>群聊与个人表成为事实上的"影子记录库"（<span class="fact">f14</span>），既无版本也无访问控制。双周反馈落地时，异常标记位至少应带"原记录链接、疑点类型、提报人"三项——<b>此项为待验证假设</b>，字段与审批路径还需与唐映秋、傅景确认。</td></tr>
+</tbody>
+</table>
+<div class="box">
+<b>隐私与可追溯的张力：</b>可追溯要求"能重建当次处理"（f45），限制访问要求"不向其他企业公开个体记录"（f40）。二者不冲突的前提是<b>按角色切分粒度</b>：企业侧只看本企业学生的记录，专业组看去标识化后的聚合结论，教务与教学质量负责人看可追溯到个体的完整链路。<b>但具体权限分级能做到什么程度，需秦芮从系统侧确认</b>，本文件不作推断。
+</div>
+
+<h2>六、待验证项（不作推断的边界）</h2>
+<p>以下 6 项直接影响上面的成本与隐私结论能否落地，访谈中<b>明确未核实</b>，此处如实列出，不替代结论：</p>
+<ol>
+<li><b>"可执行"由谁判定</b>，按岗位任务还是课程模块口径——决定复核量，从而决定复核成本（对应 f42 与 followUps）。</li>
+<li><b>12 万元四类成本的分摊比例</b>——接口与维护估算需秦芮从系统侧给出（f03）。</li>
+<li><b>复核成本是否随覆盖判定复核量变化</b>——取决于傅景的复核方式（f03 相关）。</li>
+<li><b>异常换岗由谁发起、超时协调时限、版本记录归谁保管</b>（f25）。</li>
+<li><b>审核日志谁能看、看到什么粒度</b>，以及 90 天到期后的归档保管责任（f43·f45）。</li>
+<li><b>学生申诉入口、受理人与答复时限</b>——现状流程图中完全缺失这一环，属结构性空白。</li>
+</ol>
+
+<h2>七、改进优先级建议</h2>
+<div class="box avoid">
+<p style="margin-bottom:6pt"><b>按"投入产出比"排序，而非按痛点严重度排序：</b></p>
+<ol style="margin-bottom:0">
+<li><b>先改源头格式，不先改系统。</b>把企业评语强制挂到"岗位任务 + 行为实例"上，可同时降低 ② 的追问轮次、③ 的整理工时、④ 的复核量。这是唯一一处改动能同时命中时间、成本、隐私三个维度（f10·f41·f12）。</li>
+<li><b>把 ⑦ 的映射校验前置到 ① 之前。</b>换岗/延期一发生就刷新导师关联，而不是等到整理阶段回头核对（f11），可消除大部分返工成本。</li>
+<li><b>用双周轻量提交替代长问卷。</b>企业导师已明确"长问卷会拖到学期结束才填"、"愿每两周提交一次具体任务例子"（f50），这是完整率从 54% 走向 85% 最直接的抓手。</li>
+<li><b>把补录路径拉回系统内。</b>用结构化异常标记位承载原因字段，替代群聊/个人表（f14），既补回可追溯性，也消除影子记录库这一隐私盲区。</li>
+<li><b>权限分级在试点前定死，不要试点中调。</b>企业侧／专业组／教务侧的可见粒度一旦在试点中期变更，已产出的评审结论会失去可比性（f40·f45）。</li>
+</ol>
+</div>
+
+<p class="footer">本文所有结论均标注 education-fNNN 事实编号，可回溯至 discovery-report.json 访谈原文。凡访谈未量化、未核实的项目已在正文与第六节显式标注，未作任何推测性补全。<br>
+本文件仅覆盖"现状痛点诊断"，不含 To-Be 方案设计；如需下一步，建议以本文第一节的三段式判断作为 To-Be 设计的输入约束。</p>
+
+</body>
+</html>

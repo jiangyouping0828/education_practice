@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}知识库管理{% endblock %}
+{% block nav_kb %}active{% endblock %}
+{% block h1 %}知识库管理{% endblock %}
+{% block body %}
+{% if ok %}<div class="alert ok">{{ ok }}</div>{% endif %}
+{% if err %}<div class="alert err">{{ err }}</div>{% endif %}
+
+<div class="card">
+  <h2>上传制度文档</h2>
+  <form method="post" action="/admin/kb/upload" enctype="multipart/form-data">
+    <input type="file" name="file" accept=".md,.markdown,.txt" required>
+    <button type="submit">上传并入库</button>
+    <span style="font-size:12px;color:var(--muted);margin-left:10px;">支持 .md / .txt，≤2MB，按章节自动切片</span>
+  </form>
+</div>
+
+<div class="card">
+  <h2>已入库文档</h2>
+  <table>
+    <tr><th>文档名称</th><th>片段数</th><th>状态</th><th>入库时间</th><th>操作</th></tr>
+    {% for d in docs %}
+    <tr>
+      <td>{{ d.title }}</td>
+      <td>{{ d.chunk_count }}</td>
+      <td><span class="badge ok">{{ d.status }}</span></td>
+      <td>{{ d.created_at|ts }}</td>
+      <td>
+        <form method="post" action="/admin/kb/delete" style="display:inline"
+              onsubmit="return confirm('确认删除《{{ d.title }}》及其全部片段？')">
+          <input type="hidden" name="doc_id" value="{{ d.id }}">
+          <button type="submit" class="danger">删除</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+    {% if not docs %}<tr><td colspan="5">知识库为空，请上传制度文档</td></tr>{% endif %}
+  </table>
+</div>
+{% endblock %}

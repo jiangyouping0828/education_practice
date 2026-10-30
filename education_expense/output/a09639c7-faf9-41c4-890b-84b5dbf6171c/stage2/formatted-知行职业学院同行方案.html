@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="docx-page-size" content="A4">
+  <title>知行职业学院实习反馈能力缺口：同行方案与 GitHub 开源案例参考</title>
+  <style>
+  :root {
+    /* 语义别名（供正文样式消费） */
+    --fs-h1: 20pt;
+    --fs-h2: 14pt;
+    --fs-h3: 12pt;
+    --fs-body: 12pt;
+    --fs-small: 9pt;
+    --ff-heading: 微软雅黑, Microsoft YaHei, sans-serif;
+    --ff-body: 宋体, SimSun, serif;
+    --lh-body: 1.6;
+    --fw-bold: 700;
+    --color-primary: #1565C0;
+    --color-text: #212121;
+    --color-heading: #1A237E;
+    --color-muted: #616161;
+    --color-border: #E0E0E0;
+    --color-bg: #FFFFFF;
+    --color-surface: #F5F7FA;
+    --color-danger: #C62828;
+    --color-success: #2E7D32;
+    --color-info-bg: #EAF2FB;
+    --color-warn-bg: #FCEBEA;
+    --spacing-paragraph: 0.75em;
+    --spacing-h1-top: 1.1em;
+    --spacing-h1-bottom: 0.55em;
+    --spacing-h2-top: 1.5em;
+    --spacing-h2-bottom: 0.5em;
+    --spacing-h3-top: 1em;
+    --spacing-h3-bottom: 0.4em;
+    --spacing-toc-title: 1em;
+    --spacing-toc-item: 0.45em;
+    --spacing-toc-nest: 0.35em;
+    --spacing-toc-indent: 1.6em;
+    --spacing-list-indent: 1.8em;
+    --spacing-li: 0.3em;
+    --spacing-cover-top: 4.2cm;
+    --spacing-cover-cat: 1.2em;
+    --spacing-cover-sub: 3.2em;
+    --spacing-cover-note: 3.6em;
+    --spacing-table-top: 0.4em;
+    --spacing-table-bottom: 1.3em;
+    --spacing-table-cell: 7px;
+    --spacing-card-padding-y: 12px;
+    --spacing-card-padding-x: 16px;
+    --spacing-callout-y: 9px;
+    --spacing-callout-x: 12px;
+    --spacing-note-y: 6px;
+    --spacing-note-x: 10px;
+    --spacing-rule-top: 1.6em;
+    --spacing-rule-bottom: 1.2em;
+    --spacing-summary-gap: 1.5em;
+    --spacing-summary-item: 0.55em;
+    --page-content-width: 16cm;
+  }
+
+
+  /* 页面规则：正文页脚居中页码，封面无页码 */
+  @page {
+    @bottom-center { content: counter(page); }
+  }
+  @page cover {
+    @bottom-center { content: none; }
+  }
+  section[role="cover"] { page: cover; }
+
+
+  * { box-sizing: border-box; }
+  body {
+    font-family: var(--ff-body);
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    color: var(--color-text);
+    background: var(--color-bg);
+    max-width: var(--page-content-width);
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* ---------- 封面 ---------- */
+  .cover-tag {
+    font-family: var(--ff-heading);
+    font-size: var(--fs-h2);
+    font-weight: var(--fw-bold);
+    color: var(--color-primary);
+    letter-spacing: 0.08em;
+    text-align: center;
+    margin-top: var(--spacing-cover-top);
+    margin-bottom: var(--spacing-rule-bottom);
+    text-indent: 0;
+  }
+  .cover-title {
+    font-family: var(--ff-heading);
+    font-size: var(--fs-h1);
+    font-weight: var(--fw-bold);
+    color: var(--color-heading);
+    text-align: center;
+    line-height: 1.45;
+    margin-top: 0;
+    margin-bottom: var(--spacing-cover-cat);
+    text-indent: 0;
+  }
+  .cover-subtitle {
+    font-size: var(--fs-h2);
+    color: var(--color-muted);
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: var(--spacing-cover-sub);
+    text-indent: 0;
+  }
+  .cover-line {
+    font-size: var(--fs-small);
+    color: var(--color-muted);
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: var(--spacing-li);
+    text-indent: 0;
+  }
+  .cover-note {
+    font-size: var(--fs-small);
+    color: var(--color-muted);
+    text-align: center;
+    margin-top: var(--spacing-cover-note);
+    text-indent: 0;
+  }
+
+  /* ---------- 目录 ---------- */
+  .doc-toc {
+    padding: 0;
+    margin-bottom: var(--spacing-summary-gap);
+  }
+  .toc-title {
+    font-family: var(--ff-heading);
+    font-size: var(--fs-h2);
+    font-weight: var(--fw-bold);
+    color: var(--color-heading);
+    text-align: center;
+    margin-bottom: var(--spacing-toc-title);
+    text-indent: 0;
+  }
+  .toc-list, .toc-list ol, .toc-list ul {
+    list-style: none;
+    list-style-type: none;
+    padding-left: 0;
+    margin: 0;
+  }
+  .toc-list li {
+    font-size: var(--fs-body);
+    margin-bottom: var(--spacing-toc-item);
+    text-indent: 0;
+    color: var(--color-text);
+  }
+  .toc-list ol { padding-left: var(--spacing-toc-indent); margin-top: var(--spacing-toc-nest); }
+  .toc-list ol li {
+    font-size: var(--fs-small);
+    color: var(--color-muted);
+  }
+  .toc-list a { color: var(--color-text); text-decoration: none; }
+
+  /* ---------- 正文 ---------- */
+  h1 {
+    font-family: var(--ff-heading);
+    font-size: var(--fs-h1);
+    font-weight: var(--fw-bold);
+    color: var(--color-heading);
+    margin-top: var(--spacing-h1-top);
+    margin-bottom: var(--spacing-summary-item);
+    text-indent: 0;
+    line-height: 1.35;
+  }
+  h2 {
+    font-family: var(--ff-heading);
+    font-size: var(--fs-h2);
+    font-weight: var(--fw-bold);
+    color: var(--color-primary);
+    margin-top: var(--spacing-h2-top);
+    margin-bottom: var(--spacing-h2-bottom);
+    text-indent: 0;
+    line-height: 1.4;
+  }
+  h3 {
+    font-family: var(--ff-heading);
+    font-size: var(--fs-h3);
+    font-weight: var(--fw-bold);
+    color: var(--color-text);
+    margin-top: var(--spacing-h3-top);
+    margin-bottom: var(--spacing-h3-bottom);
+    text-indent: 0;
+    line-height: 1.4;
+  }
+  p {
+    font-size: var(--fs-body);
+    color: var(--color-text);
+    margin-top: 0;
+    margin-bottom: var(--spacing-paragraph);
+    text-indent: 2em;
+    text-align: justify;
+    line-height: var(--lh-body);
+  }
+  ul, ol {
+    margin-top: 0;
+    margin-bottom: var(--spacing-paragraph);
+    padding-left: var(--spacing-list-indent);
+  }
+  li {
+    font-size: var(--fs-body);
+    color: var(--color-text);
+    margin-bottom: var(--spacing-li);
+    text-indent: 0;
+    line-height: 1.55;
+  }
+  strong { font-weight: var(--fw-bold); color: var(--color-text); }
+
+  /* ---------- 执行摘要 ---------- */
+  .executive-summary {
+    border-left: 4px solid var(--color-primary);
+    background: var(--color-surface);
+    padding: var(--spacing-card-padding-y) var(--spacing-card-padding-x);
+    margin-top: var(--spacing-table-bottom);
+    margin-bottom: var(--spacing-summary-gap);
+  }
+  .summary-header {
+    margin-bottom: var(--spacing-summary-item);
+    text-indent: 0;
+  }
+  .summary-header h2 {
+    font-family: var(--ff-heading);
+    font-size: var(--fs-h2);
+    font-weight: var(--fw-bold);
+    color: var(--color-heading);
+    margin-top: 0;
+    margin-bottom: 0;
+    text-indent: 0;
+  }
+  .summary-body p {
+    text-indent: 0;
+  }
+
+  /* ---------- 摘要卡 ---------- */
+
+  /* ---------- 表格 ---------- */
+  table.grid {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: var(--spacing-table-top);
+    margin-bottom: var(--spacing-table-bottom);
+  }
+  table.grid caption {
+    caption-side: top;
+    text-align: left;
+    font-family: var(--ff-heading);
+    font-size: var(--fs-small);
+    font-weight: var(--fw-bold);
+    color: var(--color-muted);
+    padding-bottom: var(--spacing-h2-bottom);
+  }
+  table.grid th {
+    background: var(--color-surface);
+    color: var(--color-heading);
+    font-family: var(--ff-heading);
+    font-size: var(--fs-small);
+    font-weight: var(--fw-bold);
+    border: 1px solid var(--color-border);
+    padding: var(--spacing-table-cell);
+    text-align: left;
+    vertical-align: middle;
+  }
+  table.grid td {
+    border: 1px solid var(--color-border);
+    font-size: var(--fs-small);
+    color: var(--color-text);
+    padding: var(--spacing-table-cell);
+    text-align: left;
+    vertical-align: top;
+    line-height: 1.5;
+  }
+
+  /* ---------- 提示块 ---------- */
+  .callout-info {
+    border-left: 3px solid var(--color-primary);
+    background: var(--color-info-bg);
+    padding: var(--spacing-callout-y) var(--spacing-callout-x);
+    margin-bottom: var(--spacing-paragraph);
+    text-indent: 0;
+    font-size: var(--fs-body);
+  }
+  .callout-warn {
+    border-left: 3px solid var(--color-danger);
+    background: var(--color-warn-bg);
+    padding: var(--spacing-callout-y) var(--spacing-callout-x);
+    margin-bottom: var(--spacing-paragraph);
+    text-indent: 0;
+    font-size: var(--fs-body);
+  }
+  .data-emphasis { color: var(--color-danger); font-weight: var(--fw-bold); }
+  .kpi-num { color: var(--color-primary); font-weight: var(--fw-bold); }
+
+  .section-rule {
+    border: none;
+    border-top: 1px solid var(--color-border);
+    margin-top: var(--spacing-rule-top);
+    margin-bottom: var(--spacing-rule-bottom);
+  }
+  .src-note {
+    background: var(--color-surface);
+    font-size: var(--fs-small);
+    color: var(--color-muted);
+    padding: var(--spacing-note-y) var(--spacing-note-x);
+    margin-bottom: var(--spacing-toc-title);
+    text-indent: 0;
+  }
+  </style>
+</head>
+<body>
+  <section role="cover">
+    <p class="cover-tag">同行方案 · 教育行业实习反馈</p>
+    <p class="cover-title">实习反馈里的能力缺口：<br>同行方案与 GitHub 开源案例参考</p>
+    <p class="cover-subtitle">知行职业学院 · 机电专业 5 家企业最小试点</p>
+    <p class="cover-line">编制依据：知行职业学院 · 业务需求发现报告（覆盖率 97%）</p>
+    <p class="cover-line">适用范围：机电专业、5 家企业、30 条历史反馈回放</p>
+    <p class="cover-line">案例核实：GitHub REST API 逐条核对，2026-10-23</p>
+    <p class="cover-line">编制日期：2026 年 10 月 23 日</p>
+    <p class="cover-note">本报告基于合成场景访谈；需求为待验证假设，结论不外推至未采集范围</p>
+  </section>
+
+  <section role="cover">
+    <nav class="doc-toc" aria-label="文档目录">
+      <p class="toc-title">目录</p>
+      <ol class="toc-list">
+        <li><a href="#section-1">执行摘要</a></li>
+        <li><a href="#section-2">一、需求事实基线</a></li>
+        <li><a href="#section-3">二、GitHub 同行案例地图</a>
+          <ol>
+            <li><a href="#section-3-1">（一）实习管理类系统：解决台账，不解决能力缺口</a></li>
+            <li><a href="#section-3-2">（二）最接近的 AI 实现：trinethra 的四个设计决策</a></li>
+            <li><a href="#section-3-3">（三）方法论类：AutoSCORE 与 LaTA 回答“评分怎么做得可信”</a></li>
+            <li><a href="#section-3-4">（四）基础设施类：可用性最高的一层</a></li>
+          </ol>
+        </li>
+        <li><a href="#section-4">三、同行方案对比</a>
+          <ol>
+            <li><a href="#section-4-1">（一）三条可选路线</a></li>
+            <li><a href="#section-4-2">（二）与三个具体同行的逐项对照</a></li>
+          </ol>
+        </li>
+        <li><a href="#section-5">四、推荐架构</a>
+          <ol>
+            <li><a href="#section-5-1">（一）分层设计</a></li>
+            <li><a href="#section-5-2">（二）关键设计决策</a></li>
+            <li><a href="#section-5-3">（三）双周轻量反馈的最小闭环</a></li>
+          </ol>
+        </li>
+        <li><a href="#section-6">五、实施路线</a>
+          <ol>
+            <li><a href="#section-6-1">（一）四个阶段</a></li>
+            <li><a href="#section-6-2">（二）角色与责任</a></li>
+          </ol>
+        </li>
+        <li><a href="#section-7">六、风险与边界</a></li>
+        <li><a href="#section-8">七、结论与建议</a></li>
+        <li><a href="#section-9">附录：案例索引与核实说明</a></li>
+      </ol>
+    </nav>
+  </section>
+
+  <section role="body" data-page-restart="1">
+
+
+    <div class="executive-summary">
+      <div class="summary-header"><h2 id="section-1">执行摘要</h2></div>
+      <div class="summary-body">
+      <p>本报告把《知行职业学院 · 业务需求发现报告》中的六条候选需求，转译为“同行怎么做、开源代码怎么落地、我们该借什么、不该借什么”的实施方案。检索与核实范围覆盖 GitHub 上的实习管理全流程系统、大模型结构化评审与评分框架，以及可观测与评测基础设施，所有仓库的 Stars、主语言与许可证均于 2026-10-23 通过 GitHub REST API 逐条核对。</p>
+      <p>核心判断有三条。第一，本项目真正的瓶颈不是“把文本整理成建议”，而是<strong>反馈缺少岗位任务与行为实例、评分口径未对齐、批次与导师映射不稳</strong>；同行案例中最值得借鉴的恰是“结构化组件 + 人工确认”这一层，而不是更强的生成能力。第二，GitHub 上<strong>不存在可直接复用的“实习反馈→课程改进”成熟开源项目</strong>，现存的实习管理系统只解决流程台账与成绩登记，AI 能力最贴近的是个人项目 trinethra，其成熟度与许可证不足以作为生产依赖。第三，可用性最稳的开源资产集中在<strong>旁路能力</strong>：文档解析、模型网关、评测与编排。</p>
+      </div>
+    </div>
+
+    <p>由此建议采用“轻改造 + 旁路增强”路线，把 AI 挂在既有流程旁边，而不是替换既有实习管理系统。最小试点与需求报告一致：机电专业、5 家企业、30 条历史反馈回放、8 周并行试点；预算 12 万元内优先投入数据映射与评测集建设，模型与框架全部走开源或按量付费，不自建 GPU 集群。</p>
+
+    <hr class="section-rule">
+
+    <h2 id="section-2">一、需求事实基线</h2>
+
+    <p>在讨论同行方案之前，先把“要解决什么”钉死。需求报告的 35 条事实指向同一条断裂链路：企业评分 → 教师回访 → 教务汇总 → 专业组评审，但建议常没有落到具体课程（education-f01）。这条链路上分布着六个可独立验证的需求点。</p>
+
+    <table class="grid">
+      <caption>表 1　六条候选需求与关键事实</caption>
+      <thead><tr><th style="width:8%">编号</th><th style="width:30%">需求假设</th><th style="width:16%">责任角色</th><th style="width:9%">优先级</th><th style="width:37%">关键事实</th></tr></thead>
+      <tbody>
+        <tr><td>R1</td><td>反馈需绑定岗位任务与行为实例，才能形成可执行课程改进</td><td>林亦舟、叶书</td><td>P0</td><td>企业只写“沟通能力不足”，教师不知发生在哪个岗位任务</td></tr>
+        <tr><td>R2</td><td>评分与任务口径需企业与学校共同校准</td><td>顾明岚牵头</td><td>P0</td><td>企业重设备点检与交接、学校偏理论，口径不一致须停自动建议</td></tr>
+        <tr><td>R3</td><td>双周轻量反馈可提升完整率，但须与人工流程并行</td><td>林亦舟</td><td>P1</td><td>完整率 54%，目标 85%；教师每月约 10 小时整理微信、Excel、邮件</td></tr>
+        <tr><td>R4</td><td>换岗与延期需结构化交接，避免反馈发错人</td><td>唐映秋</td><td>P1</td><td>换岗后系统仍关联旧导师；关键原因散落在群聊与个人表</td></tr>
+        <tr><td>R5</td><td>批次与导师映射是前置条件，缺失字段进人工修复队列</td><td>秦芮</td><td>P0</td><td>学籍、实习、课程平台使用不同 ID；仅开放只读批量导出</td></tr>
+        <tr><td>R6</td><td>评价须可追溯且限制访问，兜底转人工要留全痕</td><td>傅景</td><td>P0</td><td>学生个人评价不得跨企业公开；能力推断必须有行为实例</td></tr>
+      </tbody>
+    </table>
+
+    <p>三条硬约束贯穿全部方案，任何同行做法只要违反其一就不能直接用：<strong>模型不能决定学生成绩</strong>（education-f09）；<strong>未确认的辅助结果不能覆盖原记录</strong>，每条结果必须显示原记录（education-f24）；<strong>接口失败时继续人工流程</strong>，保留只读快照与时间戳（education-f30）。</p>
+
+    <p>验收口径同样已被写死，后续所有方案都必须围绕它设计：专业组审阅 30 条建议，<span class="data-emphasis">至少 24 条</span>能对应到课程、任务与改进负责人；反馈完整率从 <span class="data-emphasis">54% 提升到 85%</span>；分母、统计周期与排除规则由业务负责人固定，<strong>不能用消息发送量代替实际完成量</strong>（education-f34）。</p>
+
+    <h2 id="section-3">二、GitHub 同行案例地图</h2>
+
+    <p>按“与本项目的相关层级”分为四类。核实信息包括仓库全名、Stars、主语言、许可证与最近推送时间，均可通过附录链接复现。</p>
+
+    <table class="grid">
+      <caption>表 2　同行案例分层地图（数据核实于 2026-10-23）</caption>
+      <thead><tr><th style="width:17%">层级</th><th style="width:26%">仓库</th><th style="width:8%">Stars</th><th style="width:10%">主语言</th><th style="width:12%">许可证</th><th style="width:11%">最近推送</th><th style="width:16%">与本项目的关系</th></tr></thead>
+      <tbody>
+        <tr><td>直接同行·业务流程</td><td>wwqking/Internship-Management-System</td><td>11</td><td>JavaScript</td><td>未声明</td><td>2024-07-23</td><td>国内高校实习管理系统，三角色、周报、成绩</td></tr>
+        <tr><td>直接同行·业务流程</td><td>NicolaKesla/ITS</td><td>1</td><td>JavaScript</td><td>未声明</td><td>2026-06-24</td><td>大学实习全生命周期跟踪，含评分与报告</td></tr>
+        <tr><td>直接同行·业务流程</td><td>M4CLEM/OIE-main</td><td>0</td><td>JavaScript</td><td>未声明</td><td>2025-07-08</td><td>OJT 管理，含可配置量规成绩计算与企业端评分</td></tr>
+        <tr><td>最接近的 AI 实现</td><td>7upcharge/trinethra</td><td>0</td><td>JavaScript</td><td>未声明</td><td>2026-05-13</td><td>督导反馈分析：量规打分 + 证据摘录 + 缺口检测</td></tr>
+        <tr><td>方法论·结构化评分</td><td>AI4STEM-Education-Center/AutoSCORE</td><td>3</td><td>Python</td><td>MIT</td><td>2026-05-26</td><td>量规组件抽取 + 评分双智能体，AAAI/EAAI 2026</td></tr>
+        <tr><td>方法论·证据化评估</td><td>JesseRodriguez/LaTA</td><td>0</td><td>Python</td><td>AGPL-3.0</td><td>2026-10-22</td><td>分段→按量规评分→结构化 JSON→反馈报告</td></tr>
+        <tr><td>基础设施·解析</td><td>docling-project/docling</td><td>69394</td><td>Python</td><td>MIT</td><td>2026-10-22</td><td>企业问卷、Word/PDF 反馈批量解析</td></tr>
+        <tr><td>基础设施·解析</td><td>microsoft/markitdown</td><td>191669</td><td>Python</td><td>MIT</td><td>2026-10-22</td><td>Office 文档转 Markdown，轻量兜底</td></tr>
+        <tr><td>基础设施·网关</td><td>BerriAI/litellm</td><td>61838</td><td>Python</td><td>自定义</td><td>2026-10-23</td><td>统一接入多模型，成本与降级可控</td></tr>
+        <tr><td>基础设施·评测</td><td>confident-ai/deepeval</td><td>19044</td><td>Python</td><td>Apache-2.0</td><td>2026-10-19</td><td>为“建议可执行”建评测集与回归门禁</td></tr>
+        <tr><td>基础设施·评测</td><td>promptfoo/promptfoo</td><td>26309</td><td>TypeScript</td><td>MIT</td><td>2026-10-23</td><td>Prompt / 回归对比测试，CI 可跑</td></tr>
+        <tr><td>基础设施·编排</td><td>langgenius/dify</td><td>159287</td><td>Python</td><td>自定义</td><td>2026-10-23</td><td>低代码编排与人工介入节点</td></tr>
+        <tr><td>编排参考·架构</td><td>langchain-ai/open_deep_research</td><td>12676</td><td>Python</td><td>MIT</td><td>2026-08-10</td><td>规划→并行检索→反思→合成，架构可借</td></tr>
+      </tbody>
+    </table>
+
+    <p class="src-note">&nbsp;&nbsp;说明：Stars 数量不代表工程质量。本表中多个直接同行仓库 Stars 很低，说明这一细分领域尚无经过大规模生产验证的开源方案——这一点本身就是重要结论：不要指望“拿来即用”。</p>
+
+    <h3 id="section-3-1">（一）实习管理类系统：解决台账，不解决能力缺口</h3>
+
+    <p>wwqking/Internship-Management-System 是国内毕业设计级别的 Spring Boot + Vue 实习管理平台，三角色（管理员、教师、学生），功能覆盖实习信息、实习周报、实习成绩、论坛与公告。它的价值在于<strong>领域数据模型与中文业务语义</strong>：实习单位、岗位、周报、成绩、教师分工等实体关系可以直接对照，避免从零猜字段。短板同样明确：没有岗位任务层，没有行为实例，没有评分口径版本，仓库未声明许可证，最近推送为 2024 年 7 月，不能作为生产依赖。</p>
+
+    <p>NicolaKesla/ITS 是土耳其 Gebze Technical University 的实习跟踪系统，Node.js + Express + PostgreSQL + Prisma + React，含 JWT 鉴权与 pdf-parse 文档解析，覆盖从申请到评分、报告的完整生命周期。可借之处是<strong>工程结构与文档解析的位置</strong>（实习文件在入口即被解析，而不是后期补录），以及一份明确的安全加固清单。局限是角色仅到管理、委员会主席、委员会成员三级，没有企业导师视角，也没有任何 AI 组件。</p>
+
+    <p>M4CLEM/OIE-main 是菲律宾 PLMUN 的 OJT 管理系统，PHP + MySQL，最值得看的是<strong>可配置评分量规</strong>：协调员可按企业或批量定义评分标准与权重，导师与企业分别打分后由系统按量规计算最终成绩，并有“学生申请换企业需导师批准”的显式流程。它对本项目 R4（换岗交接）与 R2（口径校准）有直接参照意义——换岗在他们的系统里是一次带审批的显式事件，而不是后台静默改字段。</p>
+
+    <p>三者共同的缺口是：<strong>没有一个把“企业反馈文本”与“课程模块”连起来</strong>。这正是本项目要做的事，也是无法直接复用它们的原因。</p>
+
+    <h3 id="section-3-2">（二）最接近的 AI 实现：trinethra 的四个设计决策</h3>
+
+    <p>7upcharge/trinethra 是检索结果中与本项目最贴合的 AI 实现：粘贴督导反馈转写，约 60 秒产出结构化草稿，包含量规分（1–10）与理由、按信号与维度标注的证据摘录、KPI 映射、维度缺口分析，以及 3–5 条追问。它的四条设计决策可以直接搬到本项目。</p>
+
+    <p>第一，<strong>“草稿供复核”而非“结论”</strong>。界面顶部固定一条黄色横幅写明这是草稿，分数旁挂 high/medium/low 置信度徽标，模型被要求显式点名它检测到的偏差类型。这与 education-f24“未确认的结果不能覆盖原记录”高度一致，可作为交互层的直接参考。</p>
+
+    <p>第二，<strong>缺口检测用“逐项判定存在与否”而不是“你缺什么”</strong>。提示词把四个评估维度全部列出，要求模型对每个维度做存在性分类。这是把开放式问题转成结构化分类的经典技巧，直接对应本项目“行为实例是否缺失”的判定需求。</p>
+
+    <p>第三，<strong>结构化输出三级降级</strong>。先直解 JSON，失败则提取 JSON 块，再失败则从 Markdown 代码块提取，全失败带“只返回 JSON”的指令重试一次，并把所用解析方式写入元数据字段。解析方式本身成为置信度信号——这一点非常适合移植到“待补信息”队列的设计里。</p>
+
+    <p>第四，<strong>单次调用而非链路调用</strong>。作者在小模型上实测，五次串行调用需要 5 分钟以上，超出业务流程容忍度，因此选择单提示词加严格 schema。本项目在 5 家企业并行试点时同样受教师工时约束，这个权衡需要提前想清楚。</p>
+
+    <p>需要明确的是：trinethra 是单人项目，0 Stars，未声明许可证，仅支持本地 Ollama，无多租户、无审计日志、无权限分级。它只能作为<strong>参考实现与设计思路来源</strong>，不能作为依赖引入。</p>
+
+    <h3 id="section-3-3">（三）方法论类：AutoSCORE 与 LaTA 回答“评分怎么做得可信”</h3>
+
+    <p>AutoSCORE（AAAI/EAAI 2026，MIT）针对的正是“大模型端到端打分不可靠”的问题：准确率低、对提示词敏感、可解释性差、与量规不对齐。它的做法是拆成两个智能体——<strong>量规组件抽取智能体</strong>先从作答与任务上下文中识别与量规相关的证据，编码为结构化表示；<strong>评分智能体</strong>再基于该结构化表示给出分数。在 ASAP 四个数据集上，用 GPT-4o、LLaMA-3.1-8B/70B 评测，多智能体方案在 QWK、相关性、MAE、RMSE 上一致优于单智能体基线，且在复杂多维量规上收益最明显，在小模型上相对提升最大。</p>
+
+    <p>对本项目的直接启发：不要让模型直接输出“这条建议可不可执行”，而是先抽“岗位任务—行为实例—能力项”三元组作为结构化中间层，再由规则或人工判定“可执行”。这一拆分同时解决两个问题——可解释性（每条结论都能回溯到抽取到的组件）与小模型可用性（试点预算 12 万元，不可能全程用最强模型）。</p>
+
+    <p>LaTA 是 Gradescope 作业批改流水线，四段式：Ingest（读取提交与元数据，迟到判定取两个文件的较晚时间）→ Segment（按模式或小模型切分题目）→ Grade（推理模型对照参考解与量规逐题评分，返回结构化 JSON：每个量规项得分、给教师的内部审计备注、给学生的苏格拉底式提示）→ Report（渲染为反馈报告）。两个细节值得抄：<strong>评分结果在使用前要与量规做一次校验</strong>，以及<strong>审计备注与学生可见反馈是两份不同的产物</strong>。后者正好对应本项目“教师看到的原文与依据”和“学生看到的改进建议”必须分离的要求（education-f13、education-f33）。</p>
+
+    <h3 id="section-3-4">（四）基础设施类：可用性最高的一层</h3>
+
+    <p>这一层的价值不在于“像不像同行”，而在于决定试点能否在 8 周内跑起来。</p>
+
+    <p>Docling（MIT，69k Stars）负责把企业发来的 Word、PDF 问卷与评价表批量转成结构化文本，MarkItDown（MIT，191k Stars）作为轻量兜底。本项目现场大量反馈是微信截图、Excel、邮件附件（education-f06），解析层的稳定性直接决定“反馈完整率”能不能从 54% 走到 85%，这是最容易被低估的一环。</p>
+
+    <p>LiteLLM（61k Stars）作为统一模型网关，把模型调用抽象成同一接口，好处是<strong>成本可观测、可切换、可降级</strong>：某家模型不可用时自动回退，符合 education-f30“接口失败时继续人工流程”的兜底要求。</p>
+
+    <p>DeepEval（Apache-2.0，19k Stars）与 Promptfoo（MIT，26k Stars）负责把“建议可执行”变成可回归的评测集。这一点是很多同类项目失败的地方：改了提示词，没人知道变好还是变坏。建议把 30 条历史反馈的回放结果固化为评测集，每次规则或提示词变更都跑一次，把“至少 24 条可执行”作为发布门禁。</p>
+
+    <p>Dify（159k Stars）与 open_deep_research（MIT，12.7k Stars）提供编排层参照。后者的“规划 → 并行子智能体 → 反思 → 压缩 → 合成”结构，以及“子智能体各自隔离上下文”的做法，适合本项目按企业或按专业批量处理反馈时避免上下文串味。</p>
+
+    <h2 id="section-4">三、同行方案对比</h2>
+
+    <p>把同行做法收敛为三条可选路线，先按“数据风险、教师工时、是否与既有约束冲突”三个硬条件做取舍，再进入逐项对照。</p>
+
+    <h3 id="section-4-1">（一）三条可选路线</h3>
+
+    <table class="grid">
+      <caption>表 3　三条技术路线对比</caption>
+      <thead><tr><th style="width:16%">维度</th><th style="width:28%">路线 A：替换既有系统</th><th style="width:28%">路线 B：轻改造既有系统</th><th style="width:28%">路线 C：旁路增强（推荐）</th></tr></thead>
+      <tbody>
+        <tr><td>做法</td><td>用开源实习管理系统整体替换现有平台</td><td>在现有实习平台内加字段与模块</td><td>AI 挂在流程旁边，只读导出 + 建议草稿</td></tr>
+        <tr><td>参照对象</td><td>wwqking / ITS / OIE-main</td><td>OIE-main 的量规配置 + 换岗审批</td><td>AutoSCORE 结构 + trinethra 交互 + LaTA 审计</td></tr>
+        <tr><td>数据风险</td><td>高（历史数据迁移）</td><td>中（改表结构，影响在跑业务）</td><td>低（只读，不改原记录）</td></tr>
+        <tr><td>教师工时影响</td><td>高（全员重新培训）</td><td>中</td><td>低（双周模板替代长问卷）</td></tr>
+        <tr><td>与既有约束的冲突</td><td>违反“不能直接关掉现有人工流程”</td><td>轻微冲突</td><td>无</td></tr>
+        <tr><td>8 周内可验证</td><td>否</td><td>勉强</td><td>是</td></tr>
+        <tr><td>12 万元预算内</td><td>否</td><td>不确定</td><td>是</td></tr>
+      </tbody>
+    </table>
+
+    <p>路线 C 与需求报告“先历史回放、再并行试点，不能直接关掉现有人工流程”（education-f21）以及“仅开放只读批量导出，成绩写回接口不在本次范围”（education-f12）完全对齐。下文按路线 C 展开。</p>
+
+    <h3 id="section-4-2">（二）与三个具体同行的逐项对照</h3>
+
+    <table class="grid">
+      <caption>表 4　能力项对照：同行有什么、我们缺什么</caption>
+      <thead><tr><th style="width:17%">能力项</th><th style="width:20%">本项目要求</th><th style="width:14%">wwqking 实习系统</th><th style="width:13%">ITS</th><th style="width:16%">OIE-main</th><th style="width:20%">本项目取舍</th></tr></thead>
+      <tbody>
+        <tr><td>岗位任务与行为实例</td><td>必填，缺失即进人工修复队列</td><td>无</td><td>无</td><td>无</td><td>需自建，参考 AutoSCORE 组件抽取</td></tr>
+        <tr><td>评分口径版本化</td><td>保存生效日期与适用范围</td><td>无</td><td>无</td><td>量规可按企业配置，无版本</td><td>自建轻量版本表</td></tr>
+        <tr><td>换岗交接</td><td>结构化交接单，接手人确认才结束待办</td><td>无</td><td>无</td><td>换企业需导师审批</td><td>借 OIE 审批模型，补交接字段</td></tr>
+        <tr><td>学生 ID 映射</td><td>学籍/实习/课程三平台对齐</td><td>单一用户表</td><td>单一用户表</td><td>单一用户表</td><td>自建映射表 + 人工修复队列</td></tr>
+        <tr><td>访问控制</td><td>学生评价不跨企业公开</td><td>角色级</td><td>角色级 + JWT</td><td>角色级</td><td>需字段级 + 审计日志</td></tr>
+        <tr><td>反馈文本解析</td><td>微信/Excel/邮件混合</td><td>无</td><td>pdf-parse</td><td>无</td><td>Docling + MarkItDown</td></tr>
+        <tr><td>建议可执行判定</td><td>30 条中 ≥24 条可对应课程/任务/负责人</td><td>无</td><td>无</td><td>无</td><td>双重判定：模型抽组件 + 专业组签核</td></tr>
+      </tbody>
+    </table>
+
+    <p>对照结论很清楚：<strong>没有一家同行在“可执行判定”这一列有现成实现</strong>。这既是本项目的真正难点，也是唯一值得自建的部分。其余能力都可以用现成组件拼出来。</p>
+
+    <h2 id="section-5">四、推荐架构</h2>
+
+    <p>推荐架构的目标是让每一个环节都能单独替换、单独验证：数据层不动原记录，解析层不猜缺失值，模型层只出草稿，确认层由人签核。</p>
+
+    <h3 id="section-5-1">（一）分层设计</h3>
+
+    <table class="grid">
+      <caption>表 5　推荐架构分层与组件选型</caption>
+      <thead><tr><th style="width:16%">层</th><th style="width:26%">职责</th><th style="width:30%">选用组件</th><th style="width:28%">不做什么</th></tr></thead>
+      <tbody>
+        <tr><td>数据接入层</td><td>只读导出、字段校验、批次映射</td><td>既有平台导出接口 + 自建映射表</td><td>不写回成绩，不改原记录</td></tr>
+        <tr><td>解析归一化层</td><td>微信/Excel/邮件/PDF 转结构化</td><td>Docling、MarkItDown</td><td>不猜测缺失值，空值即进修复队列</td></tr>
+        <tr><td>组件抽取层</td><td>抽“岗位任务—行为实例—能力项”三元组</td><td>AutoSCORE 式抽取智能体</td><td>不直接输出分数或定性结论</td></tr>
+        <tr><td>建议生成层</td><td>生成课程改进建议草稿</td><td>结构化输出模型 + 严格 schema</td><td>不覆盖原记录，全部标记为草稿</td></tr>
+        <tr><td>人工确认层</td><td>专业组/导师签核、争议转人工</td><td>工作流 + 签核留痕</td><td>未确认不进入课程改进决策</td></tr>
+        <tr><td>观测与评测层</td><td>成本、质量、回归</td><td>LiteLLM、DeepEval / Promptfoo</td><td>不用模型置信度代替业务风险判断</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="section-5-2">（二）关键设计决策</h3>
+
+    <p><strong>决策一：把“可执行”定义成可判定的三元组。</strong>一条建议被视为可执行，当且仅当它能同时给出：对应的课程或课程模块、对应的岗位任务、以及明确的改进负责人。这个定义与验收口径（education-f15）逐字对齐，也让“至少 24 条”变成可逐条判定的清单，而不是主观印象。</p>
+
+    <p><strong>决策二：模型只做抽取与起草，不做判定与打分。</strong>模型输出“行为实例候选 + 能力项候选 + 建议草稿”，是否成立由专业组签核。这与 education-f18“AI 可整理观察事实与建议，最终评价由导师确认”完全一致，也规避了“模型决定学生成绩”的红线。</p>
+
+    <p><strong>决策三：所有结果必须携带原记录与版本。</strong>每条建议输出需带业务编号、资料版本、事件时间、来源，缺一不可（education-f28）。这与 LaTA 的“审计备注”思路一致：面向教师的记录必须能重建当次处理，面向学生的内容只保留改进提示。</p>
+
+    <p><strong>决策四：兜底优先于准确率。</strong>触发条件包括学生换岗、评价无行为实例、评分口径不一致、依据缺失、关键系统不可用。命中即停止自动建议，标明原因、接手人与人工确认时间（education-f32）。宁可少给建议，也不给无法追溯的建议。</p>
+
+    <h3 id="section-5-3">（三）双周轻量反馈的最小闭环</h3>
+
+    <p>针对 R3，建议把企业导师的长问卷拆成双周一次的“三个具体任务例子”模板，只问三件事：这两周学生做了哪个岗位任务、哪一次做得明显好或明显差（要有具体场景）、下两周希望他改进什么。理由是 education-f16 已明确“长问卷会拖到学期结束才填”。教师端的整理工时从每月 10 小时压缩到审核与补录，解析与归类交给解析层和组件抽取层。</p>
+
+    <p class="callout-warn">&nbsp;&nbsp;这里必须守住一条统计纪律：<strong>完整率的分子分母由业务负责人固定，不能用消息发送量代替实际完成量</strong>（education-f34）。双周模板发出去不等于收到，收到不等于有行为实例。</p>
+
+    <h2 id="section-6">五、实施路线</h2>
+
+    <p>13 周分四个阶段推进，每个阶段设明确门槛，不达标不进入下一阶段；试点期内现有人工流程全程并行，任何时点都可回退。</p>
+
+    <h3 id="section-6-1">（一）四个阶段</h3>
+
+    <table class="grid">
+      <caption>表 6　13 周实施路线与阶段门槛</caption>
+      <thead><tr><th style="width:14%">阶段</th><th style="width:12%">周期</th><th style="width:32%">主要动作</th><th style="width:22%">交付物</th><th style="width:20%">进入下一阶段门槛</th></tr></thead>
+      <tbody>
+        <tr><td>P0 打地基</td><td>第 1–2 周</td><td>三平台 ID 映射表、只读导出、字段校验、人工修复队列</td><td>批次映射表、字段完整度报告</td><td>关键字段缺失率可量化，修复队列有人负责</td></tr>
+        <tr><td>P1 历史回放</td><td>第 3–4 周</td><td>30 条历史反馈回放，专业组逐条判定课程/任务/负责人</td><td>口径草案、判定分歧清单</td><td>分歧点收敛到可开会解决的数量</td></tr>
+        <tr><td>P2 并行试点</td><td>第 5–12 周</td><td>5 家企业双周模板，AI 只出草稿，人工流程照旧</td><td>每周误判复盘记录</td><td>连续两周无重大误判且工时下降</td></tr>
+        <tr><td>P3 复测决策</td><td>第 13 周</td><td>复测完整率与可执行率，决定是否扩面</td><td>复测报告、规则版本更新</td><td>达标才扩面，不达标不扩</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="section-6-2">（二）角色与责任</h3>
+
+    <table class="grid">
+      <caption>表 7　角色分工与否决权</caption>
+      <thead><tr><th style="width:20%">角色</th><th style="width:12%">姓名</th><th style="width:46%">在本方案中的职责</th><th style="width:22%">否决权</th></tr></thead>
+      <tbody>
+        <tr><td>产教融合负责人</td><td>顾明岚</td><td>立项、预算分摊、指定改进负责人</td><td>有</td></tr>
+        <tr><td>实习指导教师</td><td>林亦舟</td><td>双周节奏执行、建议可用性反馈</td><td>无</td></tr>
+        <tr><td>教务管理员</td><td>唐映秋</td><td>异常核对、换岗交接单维护</td><td>有（对未核对结果）</td></tr>
+        <tr><td>校园信息工程师</td><td>秦芮</td><td>映射表、只读导出、权限分级、留痕能力说明</td><td>无</td></tr>
+        <tr><td>教学质量负责人</td><td>傅景</td><td>审核边界、口径版本确认、风险否决</td><td>有</td></tr>
+        <tr><td>企业实习导师</td><td>叶书</td><td>双周提交行为实例、评分口径共同校准</td><td>无</td></tr>
+      </tbody>
+    </table>
+
+    <p>预算 12 万元需覆盖接口开发、培训、复核与维护四块成本，既有系统采购不计入节省额（education-f19）。建议把最大一块投在 P0 与 P1，即数据映射与 30 条回放评测集——这两项决定后续一切指标是否可信。</p>
+
+    <h2 id="section-7">六、风险与边界</h2>
+
+    <table class="grid">
+      <caption>表 8　主要风险与应对</caption>
+      <thead><tr><th style="width:26%">风险</th><th style="width:26%">触发信号</th><th style="width:32%">应对</th><th style="width:16%">责任角色</th></tr></thead>
+      <tbody>
+        <tr><td>映射颗粒度过粗，建议无法落到课程</td><td>回放中“可执行”判定大量卡在对应不到课程模块</td><td>先定“可执行”判定人与口径：按岗位任务还是课程模块</td><td>顾明岚、傅景</td></tr>
+        <tr><td>口径分歧导致企业与学校互相不认账</td><td>同一反馈被两方判成不同等级</td><td>联合校准会产出岗位任务—能力项对照表，登记版本与适用范围</td><td>叶书、傅景</td></tr>
+        <tr><td>双周节奏推不动，完整率仍低于 85%</td><td>连续两周提交率无改善</td><td>先查模板长度与企业侧流程，不加大催收力度</td><td>林亦舟</td></tr>
+        <tr><td>学生个人评价越界扩散</td><td>出现跨企业可见的个体记录</td><td>字段级权限 + 审计日志，先由秦芮说明权限分级能力</td><td>秦芮、傅景</td></tr>
+        <tr><td>演练数据留存超期</td><td>90 天到期未处理</td><td>到期由教学质量负责人确认删除或归档</td><td>傅景</td></tr>
+        <tr><td>历史反馈缺岗位任务字段规模未知</td><td>修复队列持续增长</td><td>先量化规模再排期，不把空值当“没问题”</td><td>秦芮</td></tr>
+      </tbody>
+    </table>
+
+    <p class="callout-info">&nbsp;&nbsp;需要明确留白的四点：<strong>“可执行”由谁判定</strong>、<strong>申诉入口与答复时限</strong>、<strong>审核日志可见粒度与归档保管人</strong>、<strong>刷新触发人与各平台导出频率是否对得上</strong>。这四项在需求报告中均标记为未核实，本方案不对其做任何假设性设计。</p>
+
+    <h2 id="section-8">七、结论与建议</h2>
+
+    <p>第一，本项目不宜以“替换实习管理系统”为路径。路线 A 在 8 周与 12 万元两个约束下都不可行，且与“不能直接关掉现有人工流程”直接冲突。</p>
+
+    <p>第二，GitHub 生态在本细分领域没有成熟可用的直接方案，这本身是重要信息：说明该问题在行业内普遍存在但尚未被产品化，自建组件抽取与可执行判定有实际价值，但也意味着没有现成的质量基线可以对齐，必须自建评测集。</p>
+
+    <p>第三，建议把 <span class="kpi-num">70%</span> 的实施精力放在“数据映射 + 行为实例抽取 + 可执行判定口径”三件事上，把模型能力、编排、界面都当作可替换部件。AutoSCORE 的组件抽取思路、trinethra 的草稿复核交互、LaTA 的审计与学生反馈分离、OIE-main 的量规配置与换岗审批，是本轮最值得借鉴的四个具体做法。</p>
+
+    <p>第四，试点成功的判据不是“AI 生成了多少建议”，而是两条硬指标：专业组审阅 30 条中<span class="data-emphasis">至少 24 条</span>能对应课程、任务与改进负责人；反馈完整率从 <span class="data-emphasis">54% 到 85%</span>，且分母口径由业务负责人固定。未达标不扩面。</p>
+
+    <h2 id="section-9">附录：案例索引与核实说明</h2>
+
+    <p>下表给出本报告引用的全部案例链接与核实字段，便于逐条复核；核实方法与已知局限见本节末。</p>
+
+    <h3>（一）案例清单</h3>
+
+    <table class="grid">
+      <thead><tr><th style="width:7%">序号</th><th style="width:35%">仓库</th><th style="width:31%">链接</th><th style="width:27%">核实字段</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>wwqking/Internship-Management-System</td><td>github.com/wwqking/Internship-Management-System</td><td>Stars 11 / JS / 无许可证 / 2024-07-23</td></tr>
+        <tr><td>2</td><td>NicolaKesla/ITS</td><td>github.com/NicolaKesla/ITS</td><td>Stars 1 / JS / 无许可证 / 2026-06-24</td></tr>
+        <tr><td>3</td><td>M4CLEM/OIE-main</td><td>github.com/M4CLEM/OIE-main</td><td>Stars 0 / JS / 无许可证 / 2025-07-08</td></tr>
+        <tr><td>4</td><td>7upcharge/trinethra</td><td>github.com/7upcharge/trinethra</td><td>Stars 0 / 无许可证 / 2026-05-13</td></tr>
+        <tr><td>5</td><td>AI4STEM-Education-Center/AutoSCORE</td><td>github.com/AI4STEM-Education-Center/AutoSCORE</td><td>Stars 3 / Python / MIT / 2026-05-26</td></tr>
+        <tr><td>6</td><td>JesseRodriguez/LaTA</td><td>github.com/JesseRodriguez/LaTA</td><td>Stars 0 / Python / AGPL-3.0 / 2026-10-22</td></tr>
+        <tr><td>7</td><td>docling-project/docling</td><td>github.com/docling-project/docling</td><td>Stars 69394 / Python / MIT / 2026-10-22</td></tr>
+        <tr><td>8</td><td>microsoft/markitdown</td><td>github.com/microsoft/markitdown</td><td>Stars 191669 / Python / MIT / 2026-10-22</td></tr>
+        <tr><td>9</td><td>BerriAI/litellm</td><td>github.com/BerriAI/litellm</td><td>Stars 61838 / Python / 自定义 / 2026-10-23</td></tr>
+        <tr><td>10</td><td>confident-ai/deepeval</td><td>github.com/confident-ai/deepeval</td><td>Stars 19044 / Python / Apache-2.0 / 2026-10-19</td></tr>
+        <tr><td>11</td><td>promptfoo/promptfoo</td><td>github.com/promptfoo/promptfoo</td><td>Stars 26309 / TS / MIT / 2026-10-23</td></tr>
+        <tr><td>12</td><td>langgenius/dify</td><td>github.com/langgenius/dify</td><td>Stars 159287 / Python / 自定义 / 2026-10-23</td></tr>
+        <tr><td>13</td><td>langchain-ai/open_deep_research</td><td>github.com/langchain-ai/open_deep_research</td><td>Stars 12676 / Python / MIT / 2026-08-10</td></tr>
+      </tbody>
+    </table>
+
+    <h3>（二）引用文献</h3>
+
+    <p>Yun Wang, Zhaojun Ding, Xuansheng Wu, Siyue Sun, Ninghao Liu, Xiaoming Zhai. <em>AutoSCORE: Enhancing Automated Scoring with Multi-Agent Large Language Models via Structured Component Recognition</em>. AAAI/EAAI 2026. arXiv:2509.21910.</p>
+
+    <h3>（三）核实方法与局限</h3>
+
+    <p>所有 Stars、主语言、许可证与最近推送时间取自 GitHub REST API（repos 端点），查询日期为 2026-10-23。许可证列中的“未声明”表示仓库根目录无 LICENSE 文件，无许可证的代码默认保留全部权利，不得直接复制进生产代码。仓库 README 描述的功能未做代码级验证，本报告中的能力判断基于 README 与公开说明；若进入正式选型，应补充代码审查与安全扫描。</p>
+
+  </section>
+</body>
+</html>

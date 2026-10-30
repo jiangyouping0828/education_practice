@@ -1,0 +1,21 @@
+schema_version: "1.0"
+request_id: q20261023-quote01
+entry_type: beautify_only
+stage_chain: [2, 3]
+current_stage: completed
+output_docx_path: "D:\\education_expense\\output\\q20261023-quote01\\stage3\\实习反馈AI数智化试点报价单.docx"
+output_docx_user_specified: false
+stage_2:
+  status: completed
+  route: html
+  html_sub: template
+  genre: business-report
+  output_path: "stage2/formatted-实习反馈AI数智化试点报价单.html"
+  output_format: html
+  skills_invoked: [design-token, doc-typeset]
+  fallback: false
+  fallback_reason: null
+stage_3:
+  status: pending
+  executor: doc-converter
+  skill_used: ["html-to-doc"]

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}管理后台{% endblock %} · 实习管理与教学助手</title>
+<style>
+  /* SaaS 风格：左侧导航 + 顶栏 + 内容卡片，商务蓝 */
+  :root { --blue:#185FA5; --blue-d:#0C447C; --bg:#F5F7FA; --line:#E2E5EA; --muted:#5F6B7A; --ok:#3B6D11; --err:#A32D2D; }
+  * { box-sizing:border-box; margin:0; }
+  body { font-family:"Microsoft YaHei",sans-serif; background:var(--bg); color:#222; }
+  .layout { display:flex; min-height:100vh; }
+  /* 侧边栏 */
+  aside { width:200px; background:#0F2A44; color:#C8D6E5; padding:18px 0; flex-shrink:0; }
+  aside .logo { font-size:15px; font-weight:500; color:#fff; padding:0 20px 18px; border-bottom:1px solid #1E3D5C; }
+  aside a { display:block; padding:11px 20px; color:#C8D6E5; text-decoration:none; font-size:14px; }
+  aside a:hover, aside a.active { background:#17395A; color:#fff; border-left:3px solid var(--blue); }
+  /* 主区 */
+  main { flex:1; padding:24px 32px; }
+  .topbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:22px; }
+  .topbar h1 { font-size:18px; font-weight:500; }
+  .topbar .who { font-size:13px; color:var(--muted); }
+  .topbar .who a { color:var(--blue); text-decoration:none; margin-left:10px; }
+  /* 卡片与表格 */
+  .card { background:#fff; border:1px solid var(--line); border-radius:10px; padding:20px; margin-bottom:20px; }
+  .card h2 { font-size:14px; font-weight:500; color:var(--blue-d); margin-bottom:14px; }
+  .stats { display:flex; gap:16px; margin-bottom:20px; }
+  .stat { flex:1; background:#fff; border:1px solid var(--line); border-radius:10px; padding:16px 20px; }
+  .stat .num { font-size:26px; font-weight:500; color:var(--blue); }
+  .stat .lbl { font-size:12px; color:var(--muted); margin-top:4px; }
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  th { text-align:left; color:var(--muted); font-weight:400; padding:8px 10px; border-bottom:1px solid var(--line); }
+  td { padding:9px 10px; border-bottom:1px solid #EEF1F4; }
+  tr:hover td { background:#F8FAFD; }
+  td a { color:var(--blue); text-decoration:none; }
+  .badge { display:inline-block; padding:2px 8px; border-radius:10px; font-size:12px; }
+  .badge.ok { background:#EAF3DE; color:var(--ok); }
+  .badge.warn { background:#FAEEDA; color:#854F0B; }
+  /* 提示条 */
+  .alert { padding:9px 14px; border-radius:8px; font-size:13px; margin-bottom:16px; }
+  .alert.ok { background:#EAF3DE; color:var(--ok); border:1px solid #C0DD97; }
+  .alert.err { background:#FCEBEB; color:var(--err); border:1px solid #F09595; }
+  /* 表单 */
+  input[type=text],input[type=password] { padding:8px 10px; border:1px solid var(--line); border-radius:6px; font-size:13px; }
+  button,.btn { padding:8px 16px; border:none; border-radius:6px; background:var(--blue); color:#fff;
+                font-size:13px; cursor:pointer; text-decoration:none; display:inline-block; }
+  button.danger { background:#A32D2D; }
+  /* 问答纪律列表 */
+  .rule { display:flex; gap:10px; padding:8px 0; font-size:13px; border-bottom:1px dashed #EEF1F4; }
+  .rule:last-child { border-bottom:none; }
+  .rule .no { width:20px; height:20px; border-radius:50%; background:var(--blue-bg,#E6F1FB); color:var(--blue);
+              text-align:center; line-height:20px; font-size:12px; flex-shrink:0; }
+  /* 对话记录 */
+  .msg { margin-bottom:14px; }
+  .msg .role { font-size:12px; color:var(--muted); margin-bottom:4px; }
+  .msg .bubble { padding:10px 14px; border-radius:10px; font-size:13px; line-height:1.7; white-space:pre-wrap; }
+  .msg.user .bubble { background:var(--blue); color:#fff; display:inline-block; }
+  .msg.assistant .bubble { background:#fff; border:1px solid var(--line); }
+  .cite { margin-top:8px; font-size:12px; color:var(--muted); background:#F5F7FA; border-radius:6px; padding:6px 10px; }
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <div class="logo">实习管理与教学<br>管理后台</div>
+    <a href="/admin">仪表盘</a>
+    <a href="/admin/kb" class="{% block nav_kb %}{% endblock %}">知识库管理</a>
+    <a href="/admin/records" class="{% block nav_rec %}{% endblock %}">问答记录</a>
+    <a href="/">← 返回员工问答</a>
+  </aside>
+  <main>
+    <div class="topbar">
+      <h1>{% block h1 %}{% endblock %}</h1>
+      <span class="who">管理员：{{ user.username }}<a href="/logout">退出</a></span>
+    </div>
+    {% block body %}{% endblock %}
+  </main>
+</div>
+</body>
+</html>
