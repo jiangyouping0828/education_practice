@@ -1,0 +1,22 @@
+# 提交前自动检查：pip install pre-commit && pre-commit install
+repos:
+  # 基础卫生：行尾空白 / 文件末尾换行 / 大文件 / 私钥泄漏
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace
+        exclude: \.md$
+      - id: end-of-file-fixer
+      - id: check-added-large-files
+        args: ["--maxkb=512"]
+      - id: check-yaml
+      - id: check-toml
+      - id: detect-private-key          # 防止 API key / 私钥误提交
+
+  # Python lint + format（与 CI、pyproject.toml 同一规则源）
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.4.4
+    hooks:
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
