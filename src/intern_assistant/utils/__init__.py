@@ -1,20 +1,13 @@
 # -*- coding: utf-8 -*-
-"""通用小工具函数。"""
+"""通用小工具函数：历史入口保持 re-export，具体实现在同包各模块中。
 
+- digest / mask_phone / mask_idcard → utils.security
+- clean_text / cjk_len / truncate / parse_relative_date → utils.text
+"""
+from .security import digest, mask_all, mask_idcard, mask_phone  # noqa: F401
+from .text import clean_text, cjk_len, parse_relative_date, truncate  # noqa: F401
 
-def digest(text: str, limit: int = 200) -> str:
-    """截断文本作为日志摘要（日志最小化，避免落明文敏感内容）。"""
-    text = (text or "").strip().replace("\n", " ")
-    return text[:limit] + ("…" if len(text) > limit else "")
-
-
-def mask_phone(text: str) -> str:
-    """手机号脱敏：138****1234。"""
-    import re
-    return re.sub(r"(1[3-9]\d)\d{4}(\d{4})", r"\1****\2", text or "")
-
-
-def mask_idcard(text: str) -> str:
-    """身份证号脱敏：保留前 4 后 2。"""
-    import re
-    return re.sub(r"(\d{4})\d{12}(\d{2}[\dXx])", r"\1**************\2", text or "")
+__all__ = [
+    "digest", "mask_phone", "mask_idcard", "mask_all",
+    "clean_text", "cjk_len", "truncate", "parse_relative_date",
+]
