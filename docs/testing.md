@@ -1,7 +1,7 @@
 # 测试报告（Testing Report）
 
-> 生成时间：2026-11-05 · 测试环境：Windows 11 / Python 3.13 / pytest 8.x
-> 结论：**71 条自动化测试全部通过**（7.6s），其中 10 项为上线阻塞项对应的守护用例。
+> 生成时间：2026-11-05（第二轮扩充后更新） · 测试环境：Windows 11 / Python 3.13 / pytest 8.x
+> 结论：**138 条自动化测试全部通过**（4.5s），其中 10 项为上线阻塞项对应的守护用例。
 
 ## 1. 执行方式
 
@@ -23,22 +23,32 @@ IMS_DB_PATH=/tmp/ims_test.db pytest tests/
 | `tests/test_text.py` | 16 | 文本清洗 / 中英混排字数口径 / 相对日期解析（今天/明天/下周X/句内嵌入） |
 | `tests/test_security.py` | 12 | 手机号/身份证脱敏 / 日志摘要 / 六类注入特征命中 / 正常问题零误报 |
 | `tests/test_rate_limit.py` | 6 | 分钟/天双窗口 / 用户独立 / 窗口过期 / 重置 |
-| **合计** | **71** | |
+| `tests/test_vector.py` | 19 | 哈希向量化确定性 / L2 归一化 / 余弦检索排序 / 远程 embeddings 磁盘缓存 / 维度校验 |
+| `tests/test_eval_runner.py` | 19 | 用例静态审计（工具名/顺序/轮次标记）/ 四维打分 / 30 条真实用例审计 / Markdown 报告 |
+| `tests/test_maintenance.py` | 10 | 令牌/日志/票据清理的 dry-run 与真删、保留期边界、缺表容错 |
+| `tests/test_exporters.py` | 9 | CSV BOM 与列裁剪 / 三类导出 / 申请单不带 payload 外流 / Markdown 会话纪要 |
+| `tests/test_cli.py` | 12 | 子命令解析 / eval 离线评测 30 条全过 / purge dry-run→exec / export / 备份保留份数 |
+| **合计** | **138** | |
 
 ## 3. 最近一次执行结果
 
 ```text
 ============================= test session starts =============================
-collected 71 items
+collected 138 items
 
-tests/test_core.py ..........                                              [ 9/71]
-tests/test_isolation.py .......                                            [16/71]
-tests/test_rate_limit.py ......                                            [22/71]
-tests/test_rules.py .....................                                  [43/71]
-tests/test_security.py ............                                        [55/71]
-tests/test_text.py ................                                        [71/71]
+tests/test_cli.py ............                                            [12/138]
+tests/test_core.py .........                                              [21/138]
+tests/test_eval_runner.py ...................                             [40/138]
+tests/test_exporters.py .........                                         [49/138]
+tests/test_isolation.py .......                                           [56/138]
+tests/test_maintenance.py ..........                                      [66/138]
+tests/test_rate_limit.py ......                                           [72/138]
+tests/test_rules.py .....................                                 [93/138]
+tests/test_security.py ............                                      [105/138]
+tests/test_text.py ................                                      [121/138]
+tests/test_vector.py ...................                                 [138/138]
 
-========================= 71 passed, 1 warning in 7.61s ========================
+========================= 138 passed, 1 warning in 4.52s =======================
 ```
 
 唯一 warning 为 starlette TestClient 的 DeprecationWarning（上游库行为，已在 pyproject 中过滤，不影响结果）。

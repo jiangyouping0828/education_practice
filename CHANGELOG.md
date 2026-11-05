@@ -3,6 +3,28 @@
 本项目遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/) 规范，
 版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [1.3.0] - 2026-11-05
+
+### 新增
+- **向量检索后端** `core/vector.py`：远程 embeddings 适配（磁盘缓存防重复计费）+ 本地确定性哈希向量（离线/测试用）+ 余弦相似度 VectorStore，与 BM25 组成混合检索的向量半边。
+- **离线评测引擎** `evaluation/runner.py`：30 条评测用例静态审计（工具名合法性/闸门顺序约束/违规类零工具）+ 四维打分（工具序列/拒答纪律/来源引用/多轮结构）+ Markdown 报告，评测标准可程序化复现。
+- **运维 CLI** `cli.py`：init-db / eval / purge / backup / export / session 六个子命令；purge 默认 dry-run 防误删。
+- **维护任务** `core/maintenance.py`：过期令牌/超期日志（180 天保留策略）/过期票据清理，全部支持 dry-run。
+- **数据导出** `exporters.py`：会话/申请单/轮次日志导出 CSV（UTF-8 BOM，Excel 直开），单会话 Markdown 纪要；申请单导出不含 payload 正文防敏感外流。
+- **运维脚本** `scripts/backup.py`（每日备份+按份保留）、`scripts/reset_admin.py`（管理员密码救援重置）。
+- chat 接口接入限流：超限返回 429 `RATE_LIMITED`，不产生计费调用；提问带注入特征时留痕。
+
+### 变更
+- 业务规则引擎与提示词自 app.py 抽离为 `core/rules.py` / `core/prompts.py`（行为零变更）。
+- utils 重构：脱敏与注入检测集中至 `utils/security.py`，新增文本工具 `utils/text.py`。
+
+### 文档
+- README 大幅扩充：使用教程（SSE 事件协议表/curl 示例/多轮示例）、模块详解表、设计决策记录（ADR×3）、CLI 用法、评测结果表。
+- testing.md 更新至 138 条用例分布；CHANGELOG 同步。
+
+### 测试
+- 测试从 71 条扩充至 **138 条**：向量 19、评测引擎 19、维护 10、导出 9、CLI 12；全量通过。
+
 ## [1.2.0] - 2026-11-05
 
 ### 新增

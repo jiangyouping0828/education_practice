@@ -5,4 +5,4 @@
         → 编排层(core/rag.py 检索+LLM+Agent Harness) → 数据层(SQLite)。
 """
 
-__version__ = "1.1.0"
+__version__ = "1.3.0"
