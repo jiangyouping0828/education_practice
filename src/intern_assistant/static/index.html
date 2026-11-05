@@ -56,6 +56,7 @@
   <header>
     <h1>实习管理与教学助手</h1>
     <span id="health">正在检查服务状态…</span>
+    <span id="who" style="font-size:13px;color:#6B7280"></span>
   </header>
   <div id="msgs"></div>
   <footer>
@@ -72,8 +73,17 @@ const sendBtn = document.getElementById('send');
 let sessionId = localStorage.getItem('session_id') || null;  // 会话存本地，刷新不丢
 let busy = false;
 
-/* ================= 启动：健康检查 + 恢复历史 ================= */
+/* ================= 启动：身份校验 + 健康检查 + 恢复历史 ================= */
 (async function init() {
+  // 先确认登录态：未登录直接跳登录页，避免匿名拿到页面再被接口拒绝
+  try {
+    const me = await fetch('/api/me');
+    if (me.status === 401) { location.href = '/student/login'; return; }
+    const u = await me.json();
+    document.getElementById('who').innerHTML =
+      `${u.name || u.student_no}（${u.student_no}） <a href="/student/logout" style="color:#2563EB;text-decoration:none;margin-left:6px">退出</a>`;
+  } catch { location.href = '/student/login'; return; }
+
   try {
     const h = await (await fetch('/api/health')).json();
     document.getElementById('health').textContent =
@@ -197,6 +207,8 @@ async function ask() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ session_id: sessionId, question: q }),
     });
+
+    if (resp.status === 401) { location.href = '/student/login'; return; }
 
     if (!resp.ok) {                               // 流开始前的错误：HTTP 状态码 + JSON
       const e = await resp.json().catch(() => ({ message: '请求失败' }));

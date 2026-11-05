@@ -2,11 +2,19 @@
 {% block title %}会话详情{% endblock %}
 {% block h1 %}会话详情 <span style="font-size:13px;color:var(--muted)">{{ session.id }}</span>{% endblock %}
 {% block body %}
+<div class="card" style="background:#FFF8E6;border:1px solid #F0D58C;margin-bottom:16px">
+  <div style="font-size:13px;line-height:1.7">
+    学生：<strong>{{ session.student_name or "（历史匿名）" }}</strong>
+    {% if session.student_no %}（学号 {{ session.student_no }}）{% endif %}
+    {% if session.org_id %}· {{ session.org_id }}{% endif %}
+    <br>本次查看已记入访问审计（该会话累计被查看 {{ access_count }} 次）。
+  </div>
+</div>
 <div class="card">
   <h2>对话记录（开始于 {{ session.created_at|ts }}）</h2>
   {% for m in messages %}
   <div class="msg {{ m.role }}">
-    <div class="role">{{ "员工" if m.role == "user" else "助手" }} · {{ m.created_at|ts }}</div>
+    <div class="role">{{ "学生" if m.role == "user" else "助手" }} · {{ m.created_at|ts }}</div>
     <div class="bubble">{{ m.content }}</div>
     {% if m.citations %}
     <div class="cite">

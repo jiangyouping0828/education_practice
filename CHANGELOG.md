@@ -3,6 +3,21 @@
 本项目遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/) 规范，
 版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [1.1.0] - 2026-11-05
+
+### 修复（权限模型缺陷）
+- **学生端增加登录**：`/student/login` 学号 + 密码，独立 `stu_token`（HttpOnly，12h）；未登录访问首页 303 跳转。
+- **数据按学生隔离**：`sessions.user_id` 不再硬编码 `'local'`，写入当前学生 ID；会话历史读取、续问、草稿确认/取消全部校验归属，越权返回 `403 FORBIDDEN`。
+- **管理员职责收敛**：移除后台导航「返回员工问答」入口，管理员不再能以学生身份提问并落库。
+- **管理员访问留痕**：新增 `admin_access_log` 表，每次查看会话记录（管理员、时间、目标会话），详情页展示该会话累计查看次数并提示"访问已记录"。
+- **实习档案按人查询**：`users` 增加 `name` / `profile_json`，`get_intern_context` 按登录身份返回各自岗位、企业导师、学校教师、批次。
+
+### 新增
+- 演示学生账号 3 个（20230101/20230102/20230103，密码 123456），首次启动自动创建。
+- `GET /api/me` 身份接口；`FORBIDDEN` / `UNAUTHORIZED` 错误码。
+- `IMS_DB_PATH` 环境变量支持（测试使用临时库，不污染真实数据）。
+- `tests/test_isolation.py` 7 条隔离用例 + `conftest.py`；测试总数 16 条。
+
 ## [1.0.0] - 2026-10-30
 
 ### 新增

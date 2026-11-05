@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-阶段 2：员工问答 Web 入口（FastAPI + SQLite + SSE 流式）
+实习问答 Web 入口（FastAPI + SQLite + SSE 流式 + 智能体）
 =========================================================
 对应四层架构：入口层（index.html）→ 服务层（本文件的路由）
              → 编排层（复用阶段 1 的切片/检索/提示词模块）→ 数据层（SQLite）
@@ -39,7 +39,7 @@ PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..
 # 运行时数据（数据库、上传文档）放 data/runtime，不入 git
 DATA_DIR = os.path.join(PROJECT_ROOT, "data", "runtime")
 os.makedirs(DATA_DIR, exist_ok=True)
-DB_PATH = os.path.join(DATA_DIR, "chat.db")
+DB_PATH = os.getenv("IMS_DB_PATH") or os.path.join(DATA_DIR, "chat.db")
 DOC_PATH = CONFIG["doc_path"]
 # 前端资源：templates 与 static 在包目录下
 PKG_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -51,13 +51,15 @@ PKG_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS users (
     id TEXT PRIMARY KEY, username TEXT UNIQUE NOT NULL,
-    password_hash TEXT NOT NULL, role TEXT NOT NULL DEFAULT 'employee',
-    org_id TEXT, created_at REAL
+    password_hash TEXT NOT NULL, role TEXT NOT NULL DEFAULT 'student',
+    org_id TEXT, created_at REAL,
+    name TEXT,                    -- 真实姓名/显示名
+    profile_json TEXT             -- 实习档案：岗位、企业导师、学校教师、批次、状态
 );
 CREATE TABLE IF NOT EXISTS sessions (
     id TEXT PRIMARY KEY,
     title TEXT,                    -- 取首问前 20 字，会话列表用
-    user_id TEXT,                  -- 本期填 'local'
+    user_id TEXT,                  -- 归属学生（users.id），按登录身份隔离
     created_at REAL, last_active_at REAL
 );
 CREATE TABLE IF NOT EXISTS messages (
@@ -88,6 +90,22 @@ CREATE TABLE IF NOT EXISTS admin_tokens (
     user_id TEXT NOT NULL,
     expires REAL NOT NULL
 );
+-- 学生端会话令牌：与管理员令牌分表，避免权限混淆（管理员 Cookie 不能当学生用）
+CREATE TABLE IF NOT EXISTS student_tokens (
+    token TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL,
+    expires REAL NOT NULL
+);
+-- 管理员访问审计：谁在何时看了哪个学生的会话（隐私可追溯）
+CREATE TABLE IF NOT EXISTS admin_access_log (
+    id TEXT PRIMARY KEY,
+    admin_id TEXT NOT NULL,
+    admin_name TEXT,
+    target_session TEXT,
+    action TEXT,                   -- view_session / export ...
+    created_at REAL
+);
+CREATE INDEX IF NOT EXISTS idx_access_admin ON admin_access_log(admin_id, created_at);
 -- ====== 阶段 4：智能体化新增表 ======
 -- 申请单（请假 leave / 换岗 transfer）；payload 为申请内容 JSON
 CREATE TABLE IF NOT EXISTS applies (
@@ -177,15 +195,45 @@ def ingest_document(db: sqlite3.Connection, title: str, text: str) -> dict:
 
 
 def init_db() -> None:
-    """建表 + 种子数据：管理员账号 + 首次启动导入示例制度。"""
+    """建表 + 迁移 + 种子数据：管理员账号、演示学生、首次启动导入示例制度。"""
     with get_db() as db:
         db.executescript(SCHEMA)
+        # ---- 轻量迁移：老库补列（CREATE IF NOT EXISTS 不会更新已有表结构） ----
+        cols = {r["name"] for r in db.execute("PRAGMA table_info(users)").fetchall()}
+        if "name" not in cols:
+            db.execute("ALTER TABLE users ADD COLUMN name TEXT")
+        if "profile_json" not in cols:
+            db.execute("ALTER TABLE users ADD COLUMN profile_json TEXT")
+
         # 管理员种子账号（首次启动创建；正式环境应首登强制改密）
         if not db.execute("SELECT 1 FROM users WHERE role='admin'").fetchone():
             db.execute(
-                "INSERT INTO users (id, username, password_hash, role, created_at) VALUES (?,?,?,?,?)",
-                ("u_admin", "admin", hash_pwd("admin123"), "admin", time.time()),
+                "INSERT INTO users (id, username, password_hash, role, name, created_at)"
+                " VALUES (?,?,?,?,?,?)",
+                ("u_admin", "admin", hash_pwd("admin123"), "admin", "系统管理员", time.time()),
             )
+
+        # 演示学生（首次启动创建；正式环境由教务导入，或管理员重置密码）
+        if not db.execute("SELECT 1 FROM users WHERE role='student'").fetchone():
+            demo_students = [
+                ("u_stu_01", "20230101", "张三", "机电一体化2301",
+                 {"position": "设备点检助理", "mentor": "王工（企业导师）",
+                  "school_teacher": "李老师（实习指导教师）", "batch": "2026 春季批次", "status": "在岗"}),
+                ("u_stu_02", "20230102", "李四", "机电一体化2301",
+                 {"position": "产线工艺助理", "mentor": "赵工（企业导师）",
+                  "school_teacher": "李老师（实习指导教师）", "batch": "2026 春季批次", "status": "在岗"}),
+                ("u_stu_03", "20230103", "王五", "数控技术2302",
+                 {"position": "质检助理", "mentor": "陈工（企业导师）",
+                  "school_teacher": "周老师（实习指导教师）", "batch": "2026 春季批次", "status": "在岗"}),
+            ]
+            for uid, username, name, org, profile in demo_students:
+                db.execute(
+                    "INSERT INTO users (id,username,password_hash,role,org_id,name,profile_json,created_at)"
+                    " VALUES (?,?,?,?,?,?,?,?)",
+                    (uid, username, hash_pwd("123456"), "student", org, name,
+                     json.dumps(profile, ensure_ascii=False), time.time()),
+                )
+
         if db.execute("SELECT COUNT(*) AS n FROM kb_chunks").fetchone()["n"] > 0:
             return
         result = ingest_document(db, os.path.basename(DOC_PATH),
@@ -281,13 +329,13 @@ def build_user_prompt(question: str, hits: list[dict], history: list[dict]) -> s
     ctx = "\n\n".join(
         f"片段{h['rank']}（{h['document']}·{h['section']}）：{h['chunk_text']}" for h in hits
     )
-    hist = "\n".join(f"{'员工' if m['role'] == 'user' else '助手'}：{m['content'][:200]}"
+    hist = "\n".join(f"{'学生' if m['role'] == 'user' else '助手'}：{m['content'][:200]}"
                      for m in history[-HISTORY_ROUNDS * 2:])
     parts = []
     if hist:
         parts.append(f"【最近对话】\n{hist}")
     parts.append(f"【制度片段】\n{ctx}")
-    parts.append(f"【员工问题】{question}")
+    parts.append(f"【学生问题】{question}")
     return "\n\n".join(parts)
 
 
@@ -521,10 +569,18 @@ def execute_tool(name: str, args: dict, session_id: str, user_id: str) -> tuple[
                                   "chunk_text": h["chunk_text"]} for h in hits]}, events
 
             if name == "get_intern_context":
-                # 原型阶段单用户 mock：正式版按登录身份查主数据（岗位/导师/批次版本化关联）
-                ctx = {"student": "当前用户", "major": "机电一体化", "batch": "2026 春季批次",
-                       "position": "设备点检助理", "mentor": "王工（企业导师）",
-                       "school_teacher": "李老师（实习指导教师）", "status": "在岗"}
+                # 按登录身份查各自的实习档案（岗位/导师/批次按学生隔离）
+                row = db.execute("SELECT username,name,org_id,profile_json FROM users WHERE id=?",
+                                 (user_id,)).fetchone()
+                profile = json.loads(row["profile_json"]) if row and row["profile_json"] else {}
+                ctx = {"student": (row["name"] if row else "当前学生"),
+                       "student_no": (row["username"] if row else ""),
+                       "major": (row["org_id"] if row else ""),
+                       "batch": profile.get("batch", "—"),
+                       "position": profile.get("position", "—"),
+                       "mentor": profile.get("mentor", "—"),
+                       "school_teacher": profile.get("school_teacher", "—"),
+                       "status": profile.get("status", "—")}
                 audit_tool(db, session_id, name, args, "ok")
                 return ctx, events
 
@@ -845,6 +901,8 @@ ERRORS = {
     "PARAM_MISSING":    (400, "问题内容不能为空"),
     "PARAM_TOO_LONG":   (400, f"问题长度不能超过 {MAX_QUESTION_LEN} 字"),
     "SESSION_NOT_FOUND": (404, "会话不存在，请刷新页面重试"),
+    "FORBIDDEN":        (403, "无权访问该会话或该申请单"),
+    "UNAUTHORIZED":     (401, "请先登录后再使用"),
     "KB_EMPTY":         (413, "知识库为空，请管理员先上传制度文档"),
     "LLM_ERROR":        (502, "模型服务暂时不可用，请稍后重试"),
     "RETRIEVAL_ERROR":  (503, "制度检索出现异常，请稍后重试"),
@@ -877,8 +935,10 @@ class ChatRequest(BaseModel):
 
 
 @app.get("/")
-def index():
-    """聊天页面。"""
+def index(request: Request):
+    """学生端聊天页：未登录跳登录页（不再匿名可访问）。"""
+    if current_student(request) is None:
+        return RedirectResponse("/student/login", status_code=303)
     return FileResponse(os.path.join(PKG_DIR, "static", "index.html"))
 
 
@@ -895,11 +955,15 @@ def health():
 
 
 @app.get("/api/sessions/{session_id}/messages")
-def get_history(session_id: str):
-    """恢复会话历史：返回消息数组（assistant 消息带 citations）。"""
+def get_history(session_id: str, request: Request):
+    """恢复会话历史：只能读自己的会话，越权返回 403。"""
+    stu = require_student(request)
     with get_db() as db:
-        if not db.execute("SELECT 1 FROM sessions WHERE id=?", (session_id,)).fetchone():
+        row = db.execute("SELECT user_id FROM sessions WHERE id=?", (session_id,)).fetchone()
+        if not row:
             raise fail("SESSION_NOT_FOUND")
+        if row["user_id"] != stu["id"]:
+            raise fail("FORBIDDEN")
         rows = db.execute(
             "SELECT role, content, citations, created_at FROM messages"
             " WHERE session_id=? ORDER BY created_at", (session_id,)
@@ -916,8 +980,13 @@ def sse(event: str, data: dict) -> str:
 
 
 @app.post("/api/chat")
-def chat(req: ChatRequest):
-    """问答主接口：SSE 流式返回 status / sources / delta / done / error。"""
+def chat(req: ChatRequest, request: Request):
+    """问答主接口：SSE 流式返回 status / sources / delta / done / error。
+
+    必须先登录：会话归属当前学生，读别人的 session_id 直接 403。
+    """
+    stu = require_student(request)
+    student_id = stu["id"]
     # ---- 参数校验（先返回错误码与中文信息，SSE 未开始，可正常用 HTTP 状态码） ----
     if not req.question or not req.question.strip():
         raise fail("PARAM_MISSING")
@@ -926,11 +995,14 @@ def chat(req: ChatRequest):
         raise fail("PARAM_TOO_LONG")
     if not RETRIEVER.chunks:
         raise fail("KB_EMPTY")
-    # 会话校验放在流开启之前：这类错误用 HTTP 404 表达，而不是 SSE error 帧
+    # 会话校验放在流开启之前：这类错误用 HTTP 状态码表达，而不是 SSE error 帧
     if req.session_id:
         with get_db() as db:
-            if not db.execute("SELECT 1 FROM sessions WHERE id=?", (req.session_id,)).fetchone():
+            row = db.execute("SELECT user_id FROM sessions WHERE id=?", (req.session_id,)).fetchone()
+            if not row:
                 raise fail("SESSION_NOT_FOUND")
+            if row["user_id"] != student_id:
+                raise fail("FORBIDDEN")
 
     def generate():
         """SSE 生成器：整体 try/except，任何异常都转成 error 帧优雅收尾。"""
@@ -941,7 +1013,8 @@ def chat(req: ChatRequest):
                 if not session_id:
                     session_id = "s_" + uuid.uuid4().hex[:12]
                     db.execute("INSERT INTO sessions (id,title,user_id,created_at,last_active_at)"
-                               " VALUES (?,?,?,?,?)", (session_id, q[:20], "local", time.time(), time.time()))
+                               " VALUES (?,?,?,?,?)",
+                               (session_id, q[:20], student_id, time.time(), time.time()))
                 # ---- 历史上下文：最近 6 轮 ----
                 history = [dict(r) for r in db.execute(
                     "SELECT role, content FROM messages WHERE session_id=? ORDER BY created_at",
@@ -952,7 +1025,7 @@ def chat(req: ChatRequest):
                 db.execute("UPDATE sessions SET last_active_at=? WHERE id=?", (time.time(), session_id))
 
             # ---- Agent Harness 执行循环：决策→执行→回填→再决策（≤5轮）----
-            harness = AgentHarness(session_id, "local")
+            harness = AgentHarness(session_id, student_id)
             yield from harness.run(q, history)
             if harness.failed:
                 return                       # error 帧已由 Harness 发出
@@ -979,20 +1052,22 @@ def chat(req: ChatRequest):
 
 
 @app.post("/api/draft/{draft_id}/confirm")
-def confirm_draft(draft_id: str):
+def confirm_draft(draft_id: str, request: Request):
     """学生确认草稿 → 真正提交。
 
     这是全系统唯一核销校验票据的消费点（人工闸门）：
+    - 只能确认自己的草稿（他人的返回 403）；
     - 再次校验票据（伪造/过期/复用/内容篡改全部拒绝）并核销；
     - 服务端直接把草稿置为 submitted，全程不经模型——
       模型无论怎么引导都不可能替学生按下提交键。
     """
+    stu = require_student(request)
     with get_db() as db:
         row = db.execute("SELECT * FROM applies WHERE id=?", (draft_id,)).fetchone()
         if not row:
             raise fail("SESSION_NOT_FOUND")   # 复用 404 结构：草稿不存在
-        if row["user_id"] != "local":
-            raise fail("INTERNAL_ERROR")
+        if row["user_id"] != stu["id"]:
+            raise fail("FORBIDDEN")
         if row["status"] != "pending_confirm":
             return {"ok": False, "code": "ALREADY_HANDLED",
                     "message": "该草稿已处理过（已提交或已取消）"}
@@ -1012,12 +1087,15 @@ def confirm_draft(draft_id: str):
 
 
 @app.post("/api/draft/{draft_id}/cancel")
-def cancel_draft(draft_id: str):
+def cancel_draft(draft_id: str, request: Request):
     """学生取消草稿：置为 cancelled，票据不核销（10 分钟后自然过期）。"""
+    stu = require_student(request)
     with get_db() as db:
         row = db.execute("SELECT * FROM applies WHERE id=?", (draft_id,)).fetchone()
         if not row:
             raise fail("SESSION_NOT_FOUND")
+        if row["user_id"] != stu["id"]:
+            raise fail("FORBIDDEN")
         if row["status"] != "pending_confirm":
             return {"ok": False, "code": "ALREADY_HANDLED",
                     "message": "该草稿已处理过（已提交或已取消）"}
@@ -1043,12 +1121,84 @@ def unhandled_exc_handler(request, exc: Exception):
 
 # ---------------------------------------------------------------------------
 # 管理后台：管理员权限 + 服务端渲染（SaaS 风格）
-# 权限模型：员工（免登录，只能问答）/ 管理员（账密登录，维护知识库 + 查看全部记录）
+# 权限模型：学生（学号登录，仅本人数据）/ 管理员（账密登录，维护知识库 + 查看全部记录并留痕）
 # ---------------------------------------------------------------------------
 
 TEMPLATES = Jinja2Templates(directory=os.path.join(PKG_DIR, "templates"))
 TEMPLATES.env.filters["ts"] = lambda v: time.strftime("%Y-%m-%d %H:%M", time.localtime(v)) if v else "—"
 TOKEN_TTL = 12 * 3600   # 登录态 12 小时
+STUDENT_COOKIE = "stu_token"
+
+
+# ---------------------------------------------------------------------------
+# 学生端鉴权：独立 Cookie + 独立令牌表（与管理员完全隔离）
+# ---------------------------------------------------------------------------
+
+def current_student(request: Request) -> Optional[dict]:
+    """从 Cookie 解析学生登录态；无效/过期/非学生角色一律返回 None。"""
+    token = request.cookies.get(STUDENT_COOKIE)
+    if not token:
+        return None
+    with get_db() as db:
+        row = db.execute(
+            "SELECT u.id, u.username, u.name, u.org_id FROM student_tokens t"
+            " JOIN users u ON u.id = t.user_id"
+            " WHERE t.token=? AND t.expires>? AND u.role='student'",
+            (token, time.time())).fetchone()
+    return dict(row) if row else None
+
+
+def require_student(request: Request) -> dict:
+    """接口层强制登录：未登录返回 401（前端据此跳登录页）。"""
+    stu = current_student(request)
+    if stu is None:
+        raise fail("UNAUTHORIZED")
+    return stu
+
+
+@app.get("/student/login", response_class=HTMLResponse)
+def student_login_page(request: Request, error: str = ""):
+    if current_student(request):
+        return RedirectResponse("/", status_code=303)
+    return TEMPLATES.TemplateResponse(request=request, name="student_login.html",
+                                      context={"error": error})
+
+
+@app.post("/student/login")
+def student_login(request: Request, username: str = Form(""), password: str = Form("")):
+    """学生登录：学号 + 密码，签发独立 HttpOnly Cookie。"""
+    with get_db() as db:
+        row = db.execute("SELECT * FROM users WHERE username=? AND role='student'",
+                         (username.strip(),)).fetchone()
+        if not row or row["password_hash"] != hash_pwd(password):
+            return TEMPLATES.TemplateResponse(
+                request=request, name="student_login.html",
+                context={"error": "学号或密码错误"})
+        token = secrets.token_hex(32)
+        db.execute("INSERT INTO student_tokens (token, user_id, expires) VALUES (?,?,?)",
+                   (token, row["id"], time.time() + TOKEN_TTL))
+    resp = RedirectResponse("/", status_code=303)
+    resp.set_cookie(STUDENT_COOKIE, token, httponly=True, max_age=TOKEN_TTL, samesite="lax")
+    return resp
+
+
+@app.get("/student/logout")
+def student_logout(request: Request):
+    token = request.cookies.get(STUDENT_COOKIE)
+    if token:
+        with get_db() as db:
+            db.execute("DELETE FROM student_tokens WHERE token=?", (token,))
+    resp = RedirectResponse("/student/login", status_code=303)
+    resp.delete_cookie(STUDENT_COOKIE)
+    return resp
+
+
+@app.get("/api/me")
+def api_me(request: Request):
+    """当前学生身份（前端顶栏展示 + 登录态探测）。"""
+    stu = require_student(request)
+    return {"id": stu["id"], "name": stu["name"], "student_no": stu["username"],
+            "class_name": stu["org_id"]}
 
 # 「问答纪律」：管理后台同款展示，服务端已强制注入 SYSTEM_PROMPT
 DISCIPLINE = [
@@ -1196,22 +1346,30 @@ def admin_kb_delete(request: Request, doc_id: str = Form("")):
 
 @app.get("/admin/records")
 def admin_records(request: Request):
-    """问答记录：全部会话列表（管理员可见全部员工记录）。"""
+    """问答记录：全部学生会话（管理职责所需），列表展示归属学生。"""
     with get_db() as db:
         sessions = [dict(r) for r in db.execute(
-            "SELECT s.id, s.title, s.created_at, s.last_active_at,"
-            " SUM(CASE WHEN m.role='user' THEN 1 ELSE 0 END) AS q_count,"
-            " COUNT(m.id) AS msg_count"
+            "SELECT s.id, s.title, s.created_at, s.last_active_at, s.user_id,"
+            "       u.name AS student_name, u.username AS student_no,"
+            "       SUM(CASE WHEN m.role='user' THEN 1 ELSE 0 END) AS q_count,"
+            "       COUNT(m.id) AS msg_count"
             " FROM sessions s LEFT JOIN messages m ON m.session_id = s.id"
+            " LEFT JOIN users u ON u.id = s.user_id"
             " GROUP BY s.id ORDER BY s.last_active_at DESC").fetchall()]
     return admin_page(request, "records.html", sessions=sessions)
 
 
 @app.get("/admin/sessions/{session_id}")
 def admin_session_detail(request: Request, session_id: str):
-    """会话详情：完整对话记录，assistant 消息展开引用来源。"""
+    """会话详情：完整对话记录；每次查看写入审计日志（隐私可追溯）。"""
+    admin = current_admin(request)
+    if admin is None:
+        return RedirectResponse("/login", status_code=303)
     with get_db() as db:
-        row = db.execute("SELECT * FROM sessions WHERE id=?", (session_id,)).fetchone()
+        row = db.execute(
+            "SELECT s.*, u.name AS student_name, u.username AS student_no, u.org_id"
+            " FROM sessions s LEFT JOIN users u ON u.id = s.user_id WHERE s.id=?",
+            (session_id,)).fetchone()
         if not row:
             return RedirectResponse("/admin/records", status_code=303)
         messages = []
@@ -1220,4 +1378,12 @@ def admin_session_detail(request: Request, session_id: str):
             item = dict(m)
             item["citations"] = json.loads(m["citations"]) if m["citations"] else []
             messages.append(item)
-    return admin_page(request, "session_detail.html", session=dict(row), messages=messages)
+        # 访问留痕：管理员为什么看、看了谁、什么时候看的
+        db.execute("INSERT INTO admin_access_log (id,admin_id,admin_name,target_session,action,created_at)"
+                   " VALUES (?,?,?,?,?,?)",
+                   ("al_" + uuid.uuid4().hex[:12], admin["id"], admin["username"],
+                    session_id, "view_session", time.time()))
+        access_count = db.execute("SELECT COUNT(*) AS n FROM admin_access_log"
+                                  " WHERE target_session=?", (session_id,)).fetchone()["n"]
+    return admin_page(request, "session_detail.html", session=dict(row),
+                      messages=messages, access_count=access_count)

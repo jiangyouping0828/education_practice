@@ -1,19 +1,36 @@
 # 接口说明（API）
 
-Base URL：`http://127.0.0.1:8000`。除登录外均需会话 Cookie（登录后签发，HttpOnly，12 小时有效）。
+Base URL：`http://127.0.0.1:8000`。
+
+## 身份与权限
+
+| 角色 | 登录入口 | Cookie | 数据范围 |
+|------|---------|--------|---------|
+| 学生 | `/student/login`（学号+密码） | `stu_token`（HttpOnly，12h） | 仅本人会话、消息、申请单 |
+| 管理员 | `/login`（账密） | `admin_token`（HttpOnly，12h） | 全部会话（查看留审计），维护知识库 |
+
+两类令牌**分表存储**（`student_tokens` / `admin_tokens`），管理员 Cookie 不能调用学生接口，反之亦然。
+所有学生接口未登录返回 `401 UNAUTHORIZED`；访问他人数据返回 `403 FORBIDDEN`。
 
 ## 页面路由
 
 | 方法 | 路径 | 说明 |
 |------|------|------|
-| GET | `/` | 学生端聊天页（index.html） |
+| GET | `/` | 学生聊天页（未登录 303 → `/student/login`） |
+| GET/POST | `/student/login` | 学生登录 |
+| GET | `/student/logout` | 学生退出 |
 | GET/POST | `/login` | 管理后台登录 |
+| GET | `/logout` | 管理员退出 |
 | GET | `/admin` | 管理后台首页 |
 | GET | `/admin/kb` | 知识库管理 |
-| GET | `/admin/records` | 问答记录 |
-| GET | `/admin/session/{id}` | 单会话轨迹（含 agent_rounds） |
+| GET | `/admin/records` | 问答记录（含学生列） |
+| GET | `/admin/sessions/{id}` | 单会话详情（写访问审计） |
 
 ## 学生端接口
+
+### GET /api/me
+
+返回当前学生身份：`{"id","name","student_no","class_name"}`；未登录 401（前端据此跳登录页）。
 
 ### POST /api/chat（SSE 流式）
 
@@ -59,4 +76,4 @@ TICKET_MISMATCH / PAYLOAD_MISMATCH / ALREADY_HANDLED
 {"code": "KB_EMPTY", "message": "知识库为空，请管理员先上传制度文档"}
 ```
 
-常见 code：`KB_EMPTY`、`TICKET_*`（见上）、`ALREADY_HANDLED`、`SESSION_NOT_FOUND`。
+常见 code：`UNAUTHORIZED`(401)、`FORBIDDEN`(403)、`KB_EMPTY`、`TICKET_*`（见上）、`ALREADY_HANDLED`、`SESSION_NOT_FOUND`。

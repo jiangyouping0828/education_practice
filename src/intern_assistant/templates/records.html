@@ -3,11 +3,19 @@
 {% block nav_rec %}active{% endblock %}
 {% block h1 %}问答记录{% endblock %}
 {% block body %}
+<div class="card" style="background:#FFF8E6;border:1px solid #F0D58C;margin-bottom:16px">
+  <div style="font-size:13px;line-height:1.7">
+    <strong>数据访问说明：</strong>本页服务于实习管理职责（质量抽查、申诉处理、教学督导），
+    因此展示全部学生会话；<strong>每次点开对话都会写入访问审计日志</strong>（谁、何时、看了哪个会话），
+    审计记录不可删除。请勿用于与实习管理无关的用途。
+  </div>
+</div>
 <div class="card">
   <table>
-    <tr><th>会话</th><th>提问数</th><th>消息总数</th><th>最近活跃</th><th></th></tr>
+    <tr><th>学生</th><th>会话</th><th>提问数</th><th>消息总数</th><th>最近活跃</th><th></th></tr>
     {% for s in sessions %}
     <tr>
+      <td>{{ s.student_name or "（历史匿名）" }}{% if s.student_no %} <span style="color:var(--muted);font-size:12px">{{ s.student_no }}</span>{% endif %}</td>
       <td>{{ s.title or "（无标题）" }}</td>
       <td>{{ s.q_count or 0 }}</td>
       <td>{{ s.msg_count }}</td>
@@ -15,7 +23,7 @@
       <td><a href="/admin/sessions/{{ s.id }}">查看对话</a></td>
     </tr>
     {% endfor %}
-    {% if not sessions %}<tr><td colspan="5">暂无会话记录</td></tr>{% endif %}
+    {% if not sessions %}<tr><td colspan="6">暂无会话记录</td></tr>{% endif %}
   </table>
 </div>
 {% endblock %}
