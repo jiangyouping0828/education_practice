@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>登录 · 实习管理与教学助手</title>
+<style>
+  body { font-family:"Microsoft YaHei",sans-serif; background:#F5F7FA; display:flex;
+         justify-content:center; align-items:center; min-height:100vh; margin:0; }
+  .box { width:360px; background:#fff; border:1px solid #E2E5EA; border-radius:12px; padding:36px; }
+  h1 { font-size:18px; font-weight:500; color:#0C447C; margin-bottom:6px; }
+  p.sub { font-size:13px; color:#5F6B7A; margin-bottom:24px; }
+  label { display:block; font-size:13px; margin:14px 0 6px; }
+  input { width:100%; padding:10px 12px; border:1px solid #E2E5EA; border-radius:8px; font-size:14px; box-sizing:border-box; }
+  button { width:100%; margin-top:22px; padding:11px; border:none; border-radius:8px;
+           background:#185FA5; color:#fff; font-size:14px; cursor:pointer; }
+  .err { background:#FCEBEB; color:#A32D2D; border:1px solid #F09595; border-radius:8px;
+         padding:9px 12px; font-size:13px; margin-bottom:8px; }
+  .hint { background:#EAF2FB; color:#0C447C; border:1px solid #BFD5EE; border-radius:8px;
+          padding:9px 12px; font-size:12.5px; margin-top:18px; line-height:1.7; }
+  .hint code { background:#fff; border:1px solid #D8E2EF; border-radius:4px; padding:1px 6px;
+               font-family:Consolas,monospace; font-size:12.5px; }
+</style>
+</head>
+<body>
+<div class="box">
+  <h1>管理后台登录</h1>
+  <p class="sub">实习管理与教学助手 · 仅管理员可进入</p>
+  {% if error %}<div class="err">{{ error }}</div>{% endif %}
+  <form method="post" action="/login">
+    <label>用户名</label>
+    <input type="text" name="username" autofocus required>
+    <label>密码</label>
+    <input type="password" name="password" required>
+    <button type="submit">登 录</button>
+  </form>
+  <div class="hint">
+    演示环境默认账号（正式上线前请修改）：<br>
+    用户名 <code>admin</code> ｜ 密码 <code>admin123</code>
+  </div>
+</div>
+</body>
+</html>

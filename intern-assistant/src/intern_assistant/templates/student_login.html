@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>实习生登录 · 实习管理与教学助手</title>
+<style>
+  :root{--blue:#2563EB;--line:#E5E7EB;--muted:#6B7280;}
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;
+       font-family:-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;
+       background:linear-gradient(135deg,#F0F6FF 0%,#F7F9FC 60%,#EEF4FF 100%);color:#111827}
+  .box{width:400px;background:#fff;border:1px solid var(--line);border-radius:14px;
+       padding:32px 30px;box-shadow:0 10px 30px rgba(37,99,235,.08)}
+  h1{font-size:19px;margin:0 0 6px}
+  .sub{font-size:13px;color:var(--muted);line-height:1.7;margin:0 0 22px}
+  label{font-size:13px;color:#374151}
+  input{width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:8px;
+        font-size:14px;margin-top:6px;outline:none}
+  input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+  .field{margin-bottom:16px}
+  button{width:100%;padding:11px;border:0;border-radius:8px;background:var(--blue);color:#fff;
+         font-size:15px;cursor:pointer}
+  button:hover{background:#1D4ED8}
+  .err{background:#FDE8E8;color:#B42318;padding:9px 12px;border-radius:8px;font-size:13px;margin-bottom:16px}
+  .hint{font-size:12px;color:var(--muted);margin-top:16px;line-height:1.7}
+  .hint a{color:var(--blue);text-decoration:none}
+  .demo{margin-top:14px;font-size:12px;color:#6B7280;background:#F8FAFC;border-radius:8px;padding:10px 12px;line-height:1.7}
+</style>
+</head>
+<body>
+<div class="box">
+  <h1>实习生登录</h1>
+  <p class="sub">使用学号登录。问答记录与申请单仅本人可见；管理员查看会留下审计记录。</p>
+  {% if error %}<div class="err">{{ error }}</div>{% endif %}
+  <form method="post" action="/student/login">
+    <div class="field">
+      <label for="u">学号</label>
+      <input id="u" name="username" autocomplete="username" autofocus>
+    </div>
+    <div class="field">
+      <label for="p">密码</label>
+      <input id="p" name="password" type="password" autocomplete="current-password">
+    </div>
+    <button type="submit">登录</button>
+  </form>
+  <div class="demo">演示账号：20230101 / 123456（张三）· 20230102 / 123456（李四）· 20230103 / 123456（王五）</div>
+  <p class="hint">管理员请走 <a href="/login">管理后台登录</a></p>
+</div>
+</body>
+</html>
