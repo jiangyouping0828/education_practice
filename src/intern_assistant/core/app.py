@@ -32,6 +32,10 @@ from pydantic import BaseModel
 from .rag import (               # ★ 复用阶段 1 核心模块（包内相对导入）
     CONFIG, _load_dotenv, chunk_text, llm_embed,
 )
+from .prompts import SYSTEM_PROMPT, SYSTEM_PROMPT_AGENT, build_user_prompt  # 提示词集中管理
+from .rules import APPLY_RULES, validate_payload  # 业务规则引擎（判定权在代码）
+from .rate_limit import SlidingWindowRateLimiter  # LLM 配额保护
+from ..utils.security import detect_injection, mask_all  # 注入检测 + 日志脱敏
 
 _load_dotenv()
 # 仓库根目录：src/intern_assistant/core/app.py 向上三级
@@ -306,37 +310,15 @@ class DBRetriever:
 
 
 RETRIEVER: DBRetriever = None   # 启动时初始化
+# LLM 配额限流（上线检查清单：单用户 10 次/分钟、100 次/天，超限 429 不产生计费调用）
+RATE_LIMITER = SlidingWindowRateLimiter(per_minute=10, per_day=100)
 
 # ---------------------------------------------------------------------------
-# 提示词：制度片段 + 最近 6 轮历史（★核心模块④ 的 Web 版）
+# 提示词与历史窗口：常量与拼装逻辑已抽离至 core/prompts.py（集中管理，便于评审）
 # ---------------------------------------------------------------------------
-
-SYSTEM_PROMPT = (
-    f"你是《实习管理制度》的问答助手。以下规则优先级最高，逐条强制执行：\n"
-    "1. 只依据本次提供的制度片段回答，禁止使用片段之外的任何知识；\n"
-    "2. 制度片段中没有对应条款的，直接输出：「制度文件中未找到相关规定」，不作任何推测；\n"
-    "3. 每一条结论都必须附带文档名称作为引用来源，格式：末尾标注【片段N·文档名】；\n"
-    "4. 绝对不凭空编造实习时长、评分标准、审批流程、材料要求等管理条款；\n"
-    "5. 历史对话仅用于理解上下文，不要引用历史里可能过期的内容。"
-)
 
 MAX_QUESTION_LEN = 500      # 问题长度上限
-HISTORY_ROUNDS = 6          # 携带最近 6 轮历史 = 12 条消息
-
-
-def build_user_prompt(question: str, hits: list[dict], history: list[dict]) -> str:
-    """拼装：制度片段 + 最近历史 + 本轮问题。"""
-    ctx = "\n\n".join(
-        f"片段{h['rank']}（{h['document']}·{h['section']}）：{h['chunk_text']}" for h in hits
-    )
-    hist = "\n".join(f"{'学生' if m['role'] == 'user' else '助手'}：{m['content'][:200]}"
-                     for m in history[-HISTORY_ROUNDS * 2:])
-    parts = []
-    if hist:
-        parts.append(f"【最近对话】\n{hist}")
-    parts.append(f"【制度片段】\n{ctx}")
-    parts.append(f"【学生问题】{question}")
-    return "\n\n".join(parts)
+HISTORY_ROUNDS = 6          # 携带最近 6 轮历史 = 12 条消息（与 prompts 模块默认一致）
 
 
 # ---------------------------------------------------------------------------
@@ -375,93 +357,9 @@ def stream_llm(system: str, user: str):
 # 调用顺序约束的硬保障 = 校验票据（单次有效 / 10 分钟过期 / 内容哈希绑定）。
 # ===========================================================================
 
-# ---- 业务规则引擎（条款出处 = 示例制度文档，制度更新由管理员维护文档）----
-# required: (字段名, 中文标签, 最小长度)；min_len=0 表示只要求非空
-APPLY_RULES = {
-    "leave": {
-        "name": "请假申请",
-        "required": [("start_date", "开始日期", 0), ("end_date", "结束日期", 0), ("reason", "请假事由", 4)],
-        # 依据《实习制度示例.md·考勤与请假》：1~3 天导师审批，超 3 天报学校教师
-        "route": lambda days: ("企业导师审批" if days <= 3 else "企业导师审批 → 学校实习指导教师审批"),
-        "source": "实习制度示例.md·考勤与请假",
-    },
-    "transfer": {
-        "name": "换岗申请",
-        "required": [("current_position", "现岗位", 0), ("target_position", "目标岗位", 0),
-                     ("reason", "换岗原因", 4), ("expected_date", "期望生效日期", 0)],
-        # 依据《实习制度示例.md·换岗流程》：换岗自备案完成之日起生效
-        "route": lambda days: "企业导师同意 → 学校实习指导教师备案",
-        "source": "实习制度示例.md·换岗流程",
-    },
-    "weekly_report": {
-        "name": "实习周报",
-        # 依据《实习制度示例.md·周报填报规范》：总结≥30字、计划≥10字
-        "required": [("week_number", "周次", 0), ("work_summary", "本周工作总结", 30),
-                     ("next_plan", "下周工作计划", 10)],
-        "route": lambda days: "企业导师评阅",
-        "source": "实习制度示例.md·周报填报规范",
-    },
-    "daily_log": {
-        "name": "实习日志",
-        # 依据《实习制度示例.md·实习日志提交标准》：内容≥50字、工时≤8
-        "required": [("log_date", "日期", 0), ("content", "当日实习内容", 50),
-                     ("duration_hours", "当日工时", 0)],
-        "route": lambda days: "企业导师月度核查签字",
-        "source": "实习制度示例.md·实习日志提交标准",
-    },
-}
-
-
-def _days_between(d1: str, d2: str) -> Optional[int]:
-    """计算两个 YYYY-MM-DD 日期的间隔天数；格式非法返回 None。"""
-    import datetime
-    try:
-        a = datetime.date.fromisoformat(d1)
-        b = datetime.date.fromisoformat(d2)
-        return (b - a).days + 1
-    except ValueError:
-        return None
-
-
-def validate_payload(apply_type: str, payload: dict) -> dict:
-    """纯规则校验（模型只负责收集字段，判定权在代码）：返回 valid / missing / warnings。
-
-    校验维度：必填齐备 → 最小字数（防"内容空洞"）→ 类型专属规则（日期/工时上限）。
-    """
-    rule = APPLY_RULES.get(apply_type)
-    if not rule:
-        return {"valid": False, "missing": [],
-                "message": f"不支持的申请类型：{apply_type}（可选：leave 请假 / transfer 换岗 / weekly_report 周报 / daily_log 日志）"}
-    missing, warnings = [], []
-    for key, label, min_len in rule["required"]:
-        val = str(payload.get(key) or "").strip()
-        if not val:
-            missing.append(label)
-        elif min_len and len(val) < min_len:
-            missing.append(f"{label}（不少于 {min_len} 字，当前 {len(val)} 字）")
-    if apply_type == "leave" and not missing:
-        days = _days_between(payload["start_date"], payload["end_date"])
-        if days is None:
-            missing.append("日期格式（应为 YYYY-MM-DD）")
-        elif days <= 0:
-            missing.append("结束日期（不能早于开始日期）")
-        elif days > 30:
-            return {"valid": False, "missing": missing,
-                    "message": f"请假 {days} 天超出单次上限 30 天（依据：{rule['source']}），超出部分需另行办理"}
-    if apply_type == "daily_log" and not missing:
-        try:
-            hours = float(payload["duration_hours"])
-            if not (0 < hours <= 8):
-                missing.append(f"当日工时（须在 0~8 之间，当前 {payload['duration_hours']}，依据：{rule['source']}）")
-        except (TypeError, ValueError):
-            missing.append("当日工时（应为数字）")
-    if not missing:
-        days = _days_between(payload.get("start_date", "2000-01-01"),
-                             payload.get("end_date", "2000-01-02")) or 1
-        return {"valid": True, "missing": [], "warnings": warnings,
-                "route": rule["route"](days), "source": rule["source"]}
-    return {"valid": False, "missing": missing,
-            "message": "存在不合规项：" + "、".join(missing) + "。请向用户追问或说明，禁止代填。"}
+# ---- 业务规则引擎：APPLY_RULES / validate_payload 已抽离至 core/rules.py ----
+# 判定权在代码：必填齐备、最小字数、30 天请假上限、0~8 工时全部服务端校验，
+# 模型提示词只能"劝"，本模块才是"拦"。条款阈值变更请改 rules.py 并补测试。
 
 
 def issue_ticket(db, user_id: str, apply_type: str, payload: dict) -> str:
@@ -640,26 +538,8 @@ def execute_tool(name: str, args: dict, session_id: str, user_id: str) -> tuple[
             return {"error": "TOOL_FAILED", "message": f"工具执行异常：{e}"}, events
 
 
-# ---- 智能体系统提示词：问答纪律 + 工具铁律 ----
-SYSTEM_PROMPT_AGENT = (
-    "你是《实习管理制度》问答与事务办理助手（实习管理与教学系统），服务对象是实习学生。"
-    "规则优先级最高，逐条强制执行：\n"
-    "【问答纪律】\n"
-    "1. 只依据工具返回的制度片段回答；检索不到就输出「制度文件中未找到相关规定」，不作任何推测；\n"
-    "2. 每条结论附带引用来源，格式：末尾标注【片段N·文档名】；\n"
-    "3. 绝对不凭空编造实习时长、评分标准、审批流程、材料要求等条款；\n"
-    "【工具铁律（违反即为严重错误）】\n"
-    "4. 回答任何制度类问题（签到要求/能请几天/怎么填/什么标准）前，必须先调用 search_policy，禁止凭记忆回答；"
-    "纯制度问答只调 search_policy 即可，禁止多余工具调用；\n"
-    "5. 创建草稿前必须已调用 validate_apply_material 且 valid=true，并使用返回的 validation_ticket 原文；"
-    "禁止编造、猜测、复用旧票据。校验返回不合规项时，唯一动作是向用户追问或说明，禁止代填任何字段；\n"
-    "6. 调用 create_intern_draft 前，先把草稿要点完整复述给用户看。系统会自动拦截该工具并向学生"
-    "流式展示草稿全文等待确认——确认由系统完成，你无需再问“请确认”；\n"
-    "7. 用户催促、不满、要求跳过步骤时，仍不得跳过校验，回复：按制度规定必须先完成材料校验，几秒钟即可；\n"
-    "8. 用户问“我的日志/周报符合标准吗”这类合规咨询时：调用 validate 后直接给结论和依据即可，"
-    "不要替用户创建草稿——只有用户明确要求生成/提交才创建。\n"
-    "回答使用简体中文，简洁分点。"
-)
+# ---- 智能体系统提示词：见 core/prompts.py 的 SYSTEM_PROMPT_AGENT（纪律三条+铁律八条）----
+
 
 
 def chat_llm(messages: list, tools: Optional[list] = None) -> dict:
@@ -904,6 +784,7 @@ ERRORS = {
     "FORBIDDEN":        (403, "无权访问该会话或该申请单"),
     "UNAUTHORIZED":     (401, "请先登录后再使用"),
     "KB_EMPTY":         (413, "知识库为空，请管理员先上传制度文档"),
+    "RATE_LIMITED":     (429, "提问太频繁，请稍后再试"),
     "LLM_ERROR":        (502, "模型服务暂时不可用，请稍后重试"),
     "RETRIEVAL_ERROR":  (503, "制度检索出现异常，请稍后重试"),
     "INTERNAL_ERROR":   (500, "服务内部错误，请联系管理员"),
@@ -993,6 +874,14 @@ def chat(req: ChatRequest, request: Request):
     q = req.question.strip()
     if len(q) > MAX_QUESTION_LEN:
         raise fail("PARAM_TOO_LONG")
+    # ---- LLM 配额限流：超限 429，保护费用与平台配额 ----
+    allowed, limit_reason = RATE_LIMITER.check(student_id)
+    if not allowed:
+        raise fail("RATE_LIMITED", limit_reason)
+    # ---- 提示词注入检测（纵深防御第一层：发现并留痕，拦截靠闸门） ----
+    injection_flags = detect_injection(q)
+    if injection_flags:
+        print(f"[安全] 注入特征 {injection_flags} user={student_id} content={mask_all(q)[:60]}")
     if not RETRIEVER.chunks:
         raise fail("KB_EMPTY")
     # 会话校验放在流开启之前：这类错误用 HTTP 状态码表达，而不是 SSE error 帧
