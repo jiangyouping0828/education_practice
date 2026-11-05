@@ -3,6 +3,29 @@
 本项目遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/) 规范，
 版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [1.2.0] - 2026-11-05
+
+### 新增
+- **业务规则引擎模块** `core/rules.py`：四类申请规则与硬阈值常量化（`LEAVE_MAX_DAYS=30`、工时 0~8），判定权与提示词解耦；新增 `days_between` 含首尾天数计算。
+- **提示词集中管理** `core/prompts.py`：RAG 与智能体系统提示词、拒答话术常量、用户提示词拼装，便于纪律条款评审与追溯。
+- **安全工具模块** `utils/security.py`：脱敏函数迁移集中 + 新增 `detect_injection` 六类提示词注入特征检测（指令覆盖/角色伪装/提示词窃取/流程绕过/材料伪造），命中留痕。
+- **文本工具模块** `utils/text.py`：`cjk_len` 中英混排字数口径、`clean_text` 清洗、`parse_relative_date` 口语相对日期解析（支撑多轮上下文"从下周一开始"场景）。
+- **限流器** `core/rate_limit.py`：滑动窗口双窗口（10 次/分钟、100 次/天），chat 接口超限返回 429 `RATE_LIMITED`，不产生计费调用。
+
+### 工程化
+- `pyproject.toml`：项目元数据 + ruff（E/W/F/I/B/UP）+ pytest 配置，src 布局可 `pip install -e .[dev]`。
+- CI 重构：拆分 lint job（ruff check + format check），测试矩阵 Python 3.10/3.11/3.12。
+- `.pre-commit-config.yaml`：detect-private-key 防密钥泄漏 + ruff 自动检查。
+- `.editorconfig`、`Makefile`（make help 命令速查）。
+- CONTRIBUTING：Conventional Commits 八类对照表 + 一次提交一件事的拆分原则。
+
+### 文档
+- README 重写：架构图（mermaid）、功能矩阵、配置表、FAQ、Roadmap、安全须知。
+- 新增 `docs/testing.md`（测试报告：71 条用例分布与冒烟清单）、`docs/deployment.md`（部署/运维/回滚）、`docs/security.md`（威胁模型与三层防线）、`docs/eval.md`（评测方案与最新记录）。
+
+### 测试
+- 测试从 16 条扩充至 **71 条**：规则边界 21、文本工具 16、限流 6、安全 12；全量通过。
+
 ## [1.1.0] - 2026-11-05
 
 ### 修复（权限模型缺陷）
