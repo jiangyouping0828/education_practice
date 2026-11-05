@@ -20,12 +20,18 @@ cp .env.example .env        # 填入你的 DeepSeek / OpenAI 兼容 API Key
 ## 怎么跑
 
 ```bash
-# 方式一：模块入口（推荐）
-python -m intern_assistant.main
+# 方式一：Windows（cmd / 双击）
+scripts\run.bat
 
-# 方式二：脚本
+# 方式二：Linux / macOS / Git Bash
 bash scripts/run.sh
+
+# 方式三：手动（任何平台）
+set PYTHONPATH=src        # Windows；Linux/macOS 用 export PYTHONPATH=src
+python -m intern_assistant.main
 ```
+
+> 注意：Windows 的 `bash` 命令会调用 WSL（需安装 WSL2），没装 WSL 请用 `scripts\run.bat`。
 
 浏览器打开 http://127.0.0.1:8000
 
