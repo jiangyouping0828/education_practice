@@ -6,17 +6,39 @@
 
 ```bash
 pip install -r requirements.txt
-pip install -r requirements-dev.txt   # pytest 等（如提供）
+pip install -e ".[dev]"               # 含 pytest / ruff / httpx 开发工具
 cp .env.example .env                  # 本地填入自己的 API Key，切勿提交
+pre-commit install                    # 提交前自动跑卫生检查（见 .pre-commit-config.yaml）
 ```
+
+## 常用命令
+
+| 命令 | 作用 |
+|------|------|
+| `make lint` | ruff 静态检查（与 CI 同规则） |
+| `make format` | ruff 自动格式化 |
+| `make test` | 运行全部测试（不调用真实 LLM） |
+| `make run` | 本地启动开发服务 |
+| `make help` | 查看全部命令 |
 
 ## 分支与提交
 
-- 分支命名：`feat/xxx`（新功能）、`fix/xxx`（缺陷）、`docs/xxx`（文档）。
-- 提交信息遵循 Conventional Commits：
-  - `feat: 支持换岗申请的日期合法性校验`
-  - `fix: 修复票据过期后确认接口返回 500 的问题`
-  - `docs: 补充 api.md 的 SSE 事件说明`
+- 分支命名：`feat/xxx`（新功能）、`fix/xxx`（缺陷）、`docs/xxx`（文档）、`test/xxx`（补测试）。
+- 提交信息遵循 Conventional Commits（type 前缀 + 中文摘要 + 空行 + 说明正文）：
+
+  | type | 用途 | 示例 |
+  |------|------|------|
+  | `feat` | 新功能 | `feat: 支持换岗申请的日期合法性校验` |
+  | `fix` | 缺陷修复 | `fix: 修复票据过期后确认接口返回 500 的问题` |
+  | `docs` | 仅文档 | `docs: 补充 api.md 的 SSE 事件说明` |
+  | `refactor` | 重构（不改行为） | `refactor: APPLY_RULES 抽离至 core/rules.py` |
+  | `test` | 仅测试 | `test: 补充请假 30 天上限的边界用例` |
+  | `chore` | 构建/工具链 | `chore: 添加 Makefile 常用命令速查` |
+  | `ci` | 流水线 | `ci: 增加 lint job 与 Python 3.10-3.12 矩阵` |
+  | `style` | 代码风格 | `style: ruff format 全量格式化` |
+
+- **一次提交只做一件事**：功能与其测试可以同 commit，但文档、格式化、依赖变更应拆开，保证每个 commit 可独立回滚。
+- 提交正文说明"为什么改"，而不是复述"改了什么"（diff 已经说明后者）。
 
 ## 提交 PR 前
 
