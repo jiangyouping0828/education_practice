@@ -1,19 +1,43 @@
 # 教学实习数字化实践项目（education_practice）
 
-本仓库汇集"实习管理与教学"方向的完整实践成果：从前期的调研分析文档，到最终落地的
-**AI 数智化原型系统 `intern-assistant/`**（RAG 制度问答 + Function Calling 智能体）。
+本仓库汇集"实习管理与教学"方向的完整实践成果：从前期调研分析，到需求定义、详细设计、
+报价测算、测试验证，再到**已上线的 AI 数智化原型系统 `intern-assistant/`**
+（RAG 制度问答 + Function Calling 智能体，v1.3.0）。
+
+> **当前状态**：MVP 已部署上线并通过验证 ——
+> <https://intern-assistant-mvp.app.workbuddy.host/?sharecode=RGBEAC3LQ6>（管理端：地址后加 `/login`）
 
 ## 仓库结构
 
 | 目录 / 文件 | 说明 |
 |---|---|
-| `intern-assistant/` | ★ 核心交付：实习管理与教学助手（FastAPI + SQLite + DeepSeek，v1.3.0） |
-| `education_expense/` | 项目过程资料 |
-| `discovery-report.json` | 用户访谈原始资料 |
+| `intern-assistant/` | ★ 核心交付：实习管理与教学助手（FastAPI + SQLite + DeepSeek，v1.3.0，138 项测试） |
+| `DOCS/` | ★ 交付文档 9 项：访谈 → 行业分析 → 流程图 → 需求定义 → 详细设计 → 报价测算 → 运行手册（详见 [DOCS/README.md](DOCS/README.md)） |
+| `TEST/` | ★ 测试材料 3 项：量化测试方案（md+docx）、五场景可视化测试过程报告、上线部署网站地址文档 |
+| `SRC/` | ★ 源码归档 2 项：v1.3.0 完整源码包（zip）、MVP 四大要件对照说明（工程架构 / Agent 框架 / 知识库 / 人工确认点） |
+| `project-docs/` | 过程文档：痛点诊断报告 PDF、访谈报告拆分（md/json/csv）、流程图、MVP 演示指南 |
+| `education_expense/` | 早期过程资料（原型、技术方案 v1、一页纸需求清单等） |
+| `discovery-report.json` | 用户访谈原始合成报告（100 轮访谈、35 条事实编号 f00~f55） |
 | `业务现状流程图.jpg` / `ai数智化流程图.jpg` | As-Is 现状流程与 To-Be AI 数智化流程对照 |
 | `实习反馈AI数智化技术落地方案v1.docx` | 技术落地方案文档 |
-| `实习反馈AI数智化试点报价单.docx` | 试点报价（108,000 基础 + 12,000 效果浮动） |
+| `实习反馈AI数智化试点报价单.docx` | 早期试点报价单（后续演进为 DOCS/8 三档报价 V2.0） |
 | `知行职业学院实习反馈能力缺口·同行方案.docx` | 同行案例调研 |
+
+## 交付文档一览（DOCS/，9 项）
+
+| # | 材料 | 格式 |
+|---|---|---|
+| 1 | 六人访谈记录（6 角色 × md/json/csv） | 18 件 + 汇总 |
+| 2 | 项目基本简报（education-01~04） | 4 个文件 |
+| 3 | 典型事件访谈（采访记录 txt + AI 整理 docx） | txt + docx |
+| 4 | 行业分析报告 | md + docx |
+| 5 | 两份流程图（改造前融入典型事件 / 改造后） | html + png |
+| 6 | 需求定义文档 V2.0（痛点→AI 改造优先级→边界→FR-20 条→追溯矩阵→AC-14 条） | docx |
+| 7 | 详细项目设计方案（12 章，对照真实代码基线） | docx |
+| 8 | 三档报价与投入产出测算 V2.0（低 6.8 万 / 中 12 万 / 高 19.8 万 + ROI 与待验证假设） | docx |
+| 9 | 项目上线交付运行手册（12 章：启动/账号/运维/备份/故障处理） | docx |
+
+编号体系全程可追溯：事实 `f00~f55` → 痛点 `P-01~14` → 需求 `FR-01~20` → 验收 `AC-01~14` → 典型事件 `TYP-2026-001`。
 
 ## 核心项目：intern-assistant（实习管理与教学助手）
 
@@ -39,6 +63,9 @@
   安全 12 / 限流 6 / 向量 19 / 评测引擎 19 / 维护导出 CLI 29；
 - CI 在 Python 3.10 / 3.11 / 3.12 三版本矩阵执行 ruff + 全量测试；
 - 提交历史 30+ 个 Conventional Commits，每条说明"为什么改"；
-- 设计决策记录（ADR）：为何自建 Harness / 为何独立确认接口 / 为何 SQLite 起步。
+- 设计决策记录（ADR）：为何自建 Harness / 为何独立确认接口 / 为何 SQLite 起步；
+- **四个人工确认点**（对应 SRC/MVP 四大要件）：学生草稿确认、审批人工签核、
+  知识库管理员审核、管理员访问审计。
 
-快速上手、架构图、接口文档见 [`intern-assistant/README.md`](intern-assistant/README.md)。
+快速上手、架构图、接口文档见 [`intern-assistant/README.md`](intern-assistant/README.md)；
+上线后日常运行与维护见 [`DOCS/9-项目上线交付运行手册.docx`](DOCS/9-项目上线交付运行手册.docx)。
