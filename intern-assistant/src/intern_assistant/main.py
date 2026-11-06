@@ -13,7 +13,10 @@ import uvicorn  # noqa: E402
 
 
 def main() -> None:
-    uvicorn.run("intern_assistant.core.app:app", host="127.0.0.1", port=8000)
+    # 云端/沙箱部署：平台注入 PORT 环境变量时绑定 0.0.0.0:PORT；本地默认 127.0.0.1:8000 行为不变
+    port = int(os.getenv("PORT", "8000"))
+    host = os.getenv("HOST") or ("0.0.0.0" if os.getenv("PORT") else "127.0.0.1")
+    uvicorn.run("intern_assistant.core.app:app", host=host, port=port)
 
 
 if __name__ == "__main__":
