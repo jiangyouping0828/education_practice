@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>实习相关报销现状流程（As-Is · 融入典型事件）</title>
+<style>
+  body { margin:0; background:#f5f6fa; font-family:"Microsoft YaHei","PingFang SC",sans-serif; display:flex; justify-content:center; }
+  .wrap { background:#fff; width:1540px; padding:10px 0 20px; }
+  svg text { font-family:"Microsoft YaHei","PingFang SC",sans-serif; }
+</style>
+</head>
+<body>
+<div class="wrap">
+<svg width="1540" height="1060" viewBox="0 0 1540 1060" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arr" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#334155"/>
+    </marker>
+    <marker id="arrRed" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#dc2626"/>
+    </marker>
+  </defs>
+
+  <!-- 标题区 -->
+  <text x="40" y="42" font-size="24" font-weight="bold" fill="#0f172a">知行职业学院 · 实习相关报销现状流程（As-Is · 融入典型事件）</text>
+  <text x="40" y="68" font-size="13" fill="#475569">主线：垫付走访 → 贴票填表 → 逐级签字 → 财务两审 → 打款　｜　红色虚线 = 典型事件中真实发生的退回 / 痛点（数据来自典型事件记录：16 张票据、垫付 1,016.5 元、23 天到账）</text>
+
+  <!-- 图例 -->
+  <g font-size="12" fill="#334155">
+    <rect x="1020" y="80" width="110" height="22" rx="4" fill="#eff6ff" stroke="#3b82f6"/>
+    <text x="1075" y="95" text-anchor="middle">正常处理</text>
+    <rect x="1140" y="80" width="130" height="22" rx="4" fill="#fef2f2" stroke="#dc2626" stroke-dasharray="5,3"/>
+    <text x="1205" y="95" text-anchor="middle">退回 / 痛点</text>
+    <polygon points="1280,91 1296,80 1312,91 1296,102" fill="#fffbeb" stroke="#d97706"/>
+    <text x="1322" y="95">人工判断</text>
+    <rect x="1400" y="80" width="110" height="22" rx="4" fill="#f1f5f9" stroke="#64748b" stroke-dasharray="4,3"/>
+    <text x="1455" y="95" text-anchor="middle">结果标注</text>
+  </g>
+
+  <!-- 泳道底色 -->
+  <rect x="20" y="115" width="1500" height="295" fill="#f8fafc" stroke="#e2e8f0"/>
+  <rect x="20" y="410" width="1500" height="135" fill="#f1f5f9" stroke="#e2e8f0"/>
+  <rect x="20" y="545" width="1500" height="290" fill="#f8fafc" stroke="#e2e8f0"/>
+  <rect x="20" y="835" width="1500" height="215" fill="#fff7ed" stroke="#fed7aa"/>
+  <g font-size="14" font-weight="bold" fill="#0f172a">
+    <text x="32" y="136">实习指导教师</text>
+    <text x="32" y="154" font-size="11" font-weight="normal" fill="#64748b">典型事件当事人 · 一线垫付人</text>
+    <text x="32" y="431">系 / 业务部门</text>
+    <text x="32" y="449" font-size="11" font-weight="normal" fill="#64748b">签字链第 1 环</text>
+    <text x="32" y="566">财务处</text>
+    <text x="32" y="584" font-size="11" font-weight="normal" fill="#64748b">初审 · 复审 · 出纳</text>
+    <text x="32" y="856">结构性问题（典型事件暴露）</text>
+  </g>
+
+  <!-- ===== 泳道 A：教师 ===== -->
+  <!-- 开始 -->
+  <rect x="60" y="185" width="180" height="64" rx="32" fill="#1e3a8a"/>
+  <text x="150" y="212" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">实习集中回访走访</text>
+  <text x="150" y="232" text-anchor="middle" font-size="11" fill="#dbeafe">3 家企业 · 2 天</text>
+  <text x="150" y="272" text-anchor="middle" font-size="12" font-weight="bold" fill="#dc2626">个人垫付 1,016.5 元 · 16 张票据</text>
+  <line x1="240" y1="217" x2="288" y2="217" stroke="#334155" stroke-width="1.6" marker-end="url(#arr)"/>
+
+  <!-- ① 贴票 -->
+  <rect x="290" y="177" width="185" height="80" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="382" y="203" text-anchor="middle" font-size="13" font-weight="bold" fill="#0f172a">① 贴票 · 40 分钟</text>
+  <text x="382" y="223" text-anchor="middle" font-size="11" fill="#475569">16 张票按日期贴 A4</text>
+  <text x="382" y="240" text-anchor="middle" font-size="11" fill="#475569">逐段写明行程事由</text>
+  <line x1="475" y1="217" x2="523" y2="217" stroke="#334155" stroke-width="1.6" marker-end="url(#arr)"/>
+
+  <!-- ② 填表 -->
+  <rect x="525" y="177" width="200" height="80" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="625" y="203" text-anchor="middle" font-size="13" font-weight="bold" fill="#0f172a">② 填 3 张表 · 50 分钟</text>
+  <text x="625" y="223" text-anchor="middle" font-size="11" fill="#475569">差旅报销单 + 经费申请单</text>
+  <text x="625" y="240" text-anchor="middle" font-size="11" fill="#475569">+ 审批单（科目全靠猜）</text>
+  <line x1="725" y1="217" x2="746" y2="217" stroke="#334155" stroke-width="1.6" marker-end="url(#arr)"/>
+
+  <!-- 判断：科目填对吗 -->
+  <polygon points="830,163 920,217 830,271 740,217" fill="#fffbeb" stroke="#d97706" stroke-width="1.5"/>
+  <text x="830" y="212" text-anchor="middle" font-size="12" font-weight="bold" fill="#92400e">科目填对了？</text>
+  <text x="830" y="230" text-anchor="middle" font-size="10" fill="#b45309">无任何前置提示</text>
+
+  <!-- 退回1 -->
+  <rect x="770" y="305" width="230" height="72" rx="8" fill="#fef2f2" stroke="#dc2626" stroke-dasharray="5,3" stroke-width="1.5"/>
+  <text x="885" y="328" text-anchor="middle" font-size="12" font-weight="bold" fill="#b91c1c">第 1 次退回（返工）</text>
+  <text x="885" y="347" text-anchor="middle" font-size="11" fill="#7f1d1d">科目填"实习管理费"，</text>
+  <text x="885" y="364" text-anchor="middle" font-size="11" fill="#7f1d1d">应走"实践教学差旅"—— 口径只有财务懂</text>
+  <path d="M 830 271 L 830 305" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrRed)"/>
+  <text x="842" y="292" font-size="11" fill="#dc2626">否</text>
+  <path d="M 770 341 L 640 341 L 640 259" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="5,3" fill="none" marker-end="url(#arrRed)"/>
+
+  <!-- 判断"是" → 泳道B -->
+  <path d="M 920 217 L 1120 217 L 1120 437" stroke="#334155" stroke-width="1.6" fill="none" marker-end="url(#arr)"/>
+  <text x="940" y="210" font-size="11" fill="#334155">是</text>
+
+  <!-- 量化结果标注 -->
+  <rect x="1290" y="150" width="215" height="200" rx="8" fill="#f1f5f9" stroke="#64748b" stroke-dasharray="4,3"/>
+  <text x="1397" y="174" text-anchor="middle" font-size="12" font-weight="bold" fill="#0f172a">典型事件量化结果</text>
+  <g font-size="11" fill="#334155">
+    <text x="1302" y="198">· 票据 16 张 · 表格 3 份 · 签字节点 6 个</text>
+    <text x="1302" y="219">· 往返财务处 3 次（初审打回 /</text>
+    <text x="1310" y="236">补书面说明 / 领取回单）</text>
+    <text x="1302" y="257">· 个人净耗时 5.5 小时</text>
+    <text x="1302" y="278">· 提交到到账 23 天</text>
+    <text x="1302" y="299">· 垫付资金占用 1,016.5 元</text>
+    <text x="1302" y="325" fill="#dc2626" font-weight="bold">· 被退回 2 次</text>
+  </g>
+
+  <!-- ===== 泳道 B：系/业务部门 ===== -->
+  <rect x="1010" y="437" width="230" height="66" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="1125" y="462" text-anchor="middle" font-size="13" font-weight="bold" fill="#0f172a">③ 系主任签字（业务部门）</text>
+  <text x="1125" y="482" text-anchor="middle" font-size="11" fill="#475569">纸质单据逐级传递</text>
+  <text x="1125" y="530" text-anchor="middle" font-size="12" font-weight="bold" fill="#dc2626">等待 3 天：系主任外地开会，串行链一环请假即停摆</text>
+  <line x1="1125" y1="503" x2="1125" y2="583" stroke="#334155" stroke-width="1.6" marker-end="url(#arr)"/>
+
+  <!-- ===== 泳道 C：财务处 ===== -->
+  <rect x="1000" y="588" width="210" height="62" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="1105" y="613" text-anchor="middle" font-size="13" font-weight="bold" fill="#0f172a">④ 财务初审</text>
+  <text x="1105" y="633" text-anchor="middle" font-size="11" fill="#475569">逐张人工核票</text>
+  <line x1="1105" y1="650" x2="1105" y2="670" stroke="#334155" stroke-width="1.6" marker-end="url(#arr)"/>
+
+  <!-- 判断：票据合规吗 -->
+  <polygon points="1105,672 1190,720 1105,768 1020,720" fill="#fffbeb" stroke="#d97706" stroke-width="1.5"/>
+  <text x="1105" y="716" text-anchor="middle" font-size="12" font-weight="bold" fill="#92400e">票据合规？</text>
+  <text x="1105" y="734" text-anchor="middle" font-size="10" fill="#b45309">规则不前置，事后才发现</text>
+
+  <!-- 退回2 -->
+  <rect x="620" y="680" width="330" height="86" rx="8" fill="#fef2f2" stroke="#dc2626" stroke-dasharray="5,3" stroke-width="1.5"/>
+  <text x="785" y="702" text-anchor="middle" font-size="12" font-weight="bold" fill="#b91c1c">第 2 次退回（初审打回 2 处）</text>
+  <text x="785" y="722" text-anchor="middle" font-size="11" fill="#7f1d1d">① 8 张出租车票 5 张连号 → 逐张补"起点—终点—事由"</text>
+  <text x="785" y="739" text-anchor="middle" font-size="11" fill="#7f1d1d">　 + 同日多段行程书面说明</text>
+  <text x="785" y="757" text-anchor="middle" font-size="11" fill="#7f1d1d">② 发票抬头为简称 → 跨市联系酒店重开电子票（沟通 2 天）</text>
+  <path d="M 1020 720 L 950 720" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrRed)"/>
+  <text x="978" y="712" font-size="11" fill="#dc2626">否</text>
+  <path d="M 620 723 L 470 723 L 470 235 L 523 235" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="5,3" fill="none" marker-end="url(#arrRed)"/>
+  <text x="480" y="480" font-size="11" fill="#dc2626" transform="rotate(-90 480 480)">返工重贴重填</text>
+
+  <!-- 是 → 复审 -->
+  <path d="M 1190 720 L 1240 720" stroke="#334155" stroke-width="1.6" marker-end="url(#arr)"/>
+  <text x="1200" y="712" font-size="11" fill="#334155">是</text>
+  <rect x="1243" y="690" width="215" height="62" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="1350" y="714" text-anchor="middle" font-size="13" font-weight="bold" fill="#0f172a">⑤ 财务复审 + 领导签批</text>
+  <text x="1350" y="740" text-anchor="middle" font-size="12" font-weight="bold" fill="#dc2626">又等 4 天</text>
+  <line x1="1350" y1="752" x2="1350" y2="778" stroke="#334155" stroke-width="1.6" marker-end="url(#arr)"/>
+
+  <!-- ⑥ 出纳打款 = 结束 -->
+  <rect x="1235" y="781" width="235" height="44" rx="22" fill="#1e3a8a"/>
+  <text x="1352" y="808" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">⑥ 出纳打款 → 到账（第 23 天）</text>
+
+  <!-- ===== 泳道 D：结构性问题 ===== -->
+  <g font-size="12">
+    <rect x="45" y="875" width="345" height="90" rx="8" fill="#fff" stroke="#f59e0b" stroke-width="1.4"/>
+    <text x="217" y="900" text-anchor="middle" font-weight="bold" fill="#9a3412">垫付制</text>
+    <text x="217" y="922" text-anchor="middle" fill="#7c2d12">学校资金成本转嫁为教师垫资 + 催款时间</text>
+    <text x="217" y="941" text-anchor="middle" fill="#7c2d12">单次 500~2,000 元，跨市走访最高 2,800 元</text>
+
+    <rect x="420" y="875" width="345" height="90" rx="8" fill="#fff" stroke="#f59e0b" stroke-width="1.4"/>
+    <text x="592" y="900" text-anchor="middle" font-weight="bold" fill="#9a3412">票据规则不前置</text>
+    <text x="592" y="922" text-anchor="middle" fill="#7c2d12">连号车票、发票抬头这些"财务知道会打回"的点，</text>
+    <text x="592" y="941" text-anchor="middle" fill="#7c2d12">提交前没有任何提示 → 约 30% 单据被打回 ≥1 次</text>
+
+    <rect x="795" y="875" width="345" height="90" rx="8" fill="#fff" stroke="#f59e0b" stroke-width="1.4"/>
+    <text x="967" y="900" text-anchor="middle" font-weight="bold" fill="#9a3412">签字链是串行的人力依赖</text>
+    <text x="967" y="922" text-anchor="middle" fill="#7c2d12">单环节平均等待 2~3 天，任何一环请假 / 出差，</text>
+    <text x="967" y="941" text-anchor="middle" fill="#7c2d12">整条流程停摆</text>
+
+    <rect x="1170" y="875" width="330" height="90" rx="8" fill="#fff" stroke="#f59e0b" stroke-width="1.4"/>
+    <text x="1335" y="900" text-anchor="middle" font-weight="bold" fill="#9a3412">科目口径只有财务懂</text>
+    <text x="1335" y="922" text-anchor="middle" fill="#7c2d12">业务教师每次都在猜，猜错即返工；</text>
+    <text x="1335" y="941" text-anchor="middle" fill="#7c2d12">新规靠群里转文件，教师不知情导致打回</text>
+  </g>
+</svg>
+</div>
+</body>
+</html>
