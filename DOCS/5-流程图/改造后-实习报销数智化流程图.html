@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>实习相关报销数智化流程（To-Be）</title>
+<style>
+  body { margin:0; background:#f5f6fa; font-family:"Microsoft YaHei","PingFang SC",sans-serif; display:flex; justify-content:center; }
+  .wrap { background:#fff; width:1540px; padding:10px 0 20px; }
+  svg text { font-family:"Microsoft YaHei","PingFang SC",sans-serif; }
+</style>
+</head>
+<body>
+<div class="wrap">
+<svg width="1540" height="1060" viewBox="0 0 1540 1060" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arr" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#334155"/>
+    </marker>
+    <marker id="arrO" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#d97706"/>
+    </marker>
+  </defs>
+
+  <!-- 标题区 -->
+  <text x="40" y="42" font-size="24" font-weight="bold" fill="#0f172a">知行职业学院 · 实习相关报销数智化流程（To-Be）</text>
+  <text x="40" y="68" font-size="13" fill="#475569">目标路径：拍照上传 → AI 识别填单 → 提交前硬校验 → 并行审批 → 快速打款　｜　绿色 = AI 能力（校验不通过"就地改"，不打回重跑）· 红框 = 保留的人工节点</text>
+
+  <!-- 图例 -->
+  <g font-size="12" fill="#334155">
+    <rect x="1020" y="80" width="110" height="22" rx="4" fill="#eff6ff" stroke="#3b82f6"/>
+    <text x="1075" y="95" text-anchor="middle">教师操作</text>
+    <rect x="1140" y="80" width="130" height="22" rx="4" fill="#ecfdf5" stroke="#059669" stroke-width="1.6"/>
+    <text x="1205" y="95" text-anchor="middle">AI 能力</text>
+    <rect x="1280" y="80" width="120" height="22" rx="4" fill="#fef2f2" stroke="#ef4444"/>
+    <text x="1340" y="95" text-anchor="middle">保留人工节点</text>
+    <rect x="1410" y="80" width="110" height="22" rx="4" fill="#f1f5f9" stroke="#64748b" stroke-dasharray="4,3"/>
+    <text x="1465" y="95" text-anchor="middle">预期改善</text>
+  </g>
+
+  <!-- 泳道底色 -->
+  <rect x="20" y="115" width="1500" height="185" fill="#f8fafc" stroke="#e2e8f0"/>
+  <rect x="20" y="300" width="1500" height="330" fill="#f0fdf4" stroke="#bbf7d0"/>
+  <rect x="20" y="630" width="1500" height="200" fill="#f8fafc" stroke="#e2e8f0"/>
+  <rect x="20" y="830" width="1500" height="220" fill="#eff6ff" stroke="#bfdbfe"/>
+  <g font-size="14" font-weight="bold" fill="#0f172a">
+    <text x="32" y="136">实习指导教师</text>
+    <text x="32" y="154" font-size="11" font-weight="normal" fill="#64748b">只做两件事：拍照 · 确认提交</text>
+    <text x="32" y="321">AI 能力层</text>
+    <text x="32" y="339" font-size="11" font-weight="normal" fill="#64748b">OCR 识别 · 规则引擎 · 自动填单</text>
+    <text x="32" y="651">系主任 + 财务处（并行）</text>
+    <text x="32" y="669" font-size="11" font-weight="normal" fill="#64748b">AI 预审 · 人工抽检 · 终审留痕</text>
+    <text x="32" y="851">解决的旧痛点（对照典型事件）</text>
+  </g>
+
+  <!-- ===== 泳道 A：教师 ===== -->
+  <rect x="60" y="185" width="185" height="60" rx="30" fill="#1e3a8a"/>
+  <text x="152" y="210" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">实习走访结束</text>
+  <text x="152" y="230" text-anchor="middle" font-size="11" fill="#dbeafe">费用发生 · 票据在手</text>
+  <line x1="245" y1="215" x2="290" y2="215" stroke="#334155" stroke-width="1.6" marker-end="url(#arr)"/>
+
+  <rect x="292" y="185" width="215" height="60" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="399" y="210" text-anchor="middle" font-size="13" font-weight="bold" fill="#0f172a">① 手机拍照上传票据</text>
+  <text x="399" y="230" text-anchor="middle" font-size="11" fill="#475569">16 张票随手拍，无需贴 A4</text>
+  <path d="M 507 215 L 560 215 L 560 350" stroke="#334155" stroke-width="1.6" fill="none" marker-end="url(#arr)"/>
+
+  <!-- 预期改善标注 -->
+  <rect x="1160" y="150" width="345" height="140" rx="8" fill="#f1f5f9" stroke="#64748b" stroke-dasharray="4,3"/>
+  <text x="1332" y="174" text-anchor="middle" font-size="12" font-weight="bold" fill="#0f172a">预期改善（对照典型事件）</text>
+  <g font-size="11.5" fill="#065f46">
+    <text x="1175" y="198">· 到账周期：23 天 → 3~5 天</text>
+    <text x="1175" y="219">· 往返财务处：3 次 → 0 次（状态随时可查）</text>
+    <text x="1175" y="240">· 个人净耗时：5.5 小时 → 约 30 分钟</text>
+    <text x="1175" y="261">· 退回率：约 30% → &lt;5%（规则前置 + 硬校验）</text>
+    <text x="1175" y="282" fill="#334155">· 垫付：快速通道 / 学校备付金，免垫资</text>
+  </g>
+
+  <!-- ===== 泳道 B：AI 能力层 ===== -->
+  <rect x="360" y="320" width="250" height="76" rx="8" fill="#ecfdf5" stroke="#059669" stroke-width="1.8"/>
+  <text x="485" y="345" text-anchor="middle" font-size="13" font-weight="bold" fill="#065f46">② OCR 识别票据</text>
+  <text x="485" y="365" text-anchor="middle" font-size="11" fill="#047857">自动提取金额 / 日期 / 抬头 / 税号</text>
+  <text x="485" y="382" text-anchor="middle" font-size="11" fill="#047857">抬头即时比对学校全称（防"简称"退回）</text>
+  <line x1="610" y1="358" x2="658" y2="358" stroke="#334155" stroke-width="1.6" marker-end="url(#arr)"/>
+
+  <rect x="660" y="320" width="270" height="76" rx="8" fill="#ecfdf5" stroke="#059669" stroke-width="1.8"/>
+  <text x="795" y="345" text-anchor="middle" font-size="13" font-weight="bold" fill="#065f46">③ AI 自动填单</text>
+  <text x="795" y="365" text-anchor="middle" font-size="11" fill="#047857">科目规则库自动匹配"实践教学差旅"</text>
+  <text x="795" y="382" text-anchor="middle" font-size="11" fill="#047857">按行程自动生成事由与书面说明</text>
+  <line x1="930" y1="358" x2="978" y2="358" stroke="#334155" stroke-width="1.6" marker-end="url(#arr)"/>
+
+  <!-- 硬校验判断 -->
+  <polygon points="1090,296 1200,358 1090,420 980,358" fill="#fffbeb" stroke="#d97706" stroke-width="1.8"/>
+  <text x="1090" y="350" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#92400e">④ 提交前硬校验</text>
+  <text x="1090" y="369" text-anchor="middle" font-size="10.5" fill="#b45309">连号车票 / 抬头 / 要素缺失</text>
+  <text x="1090" y="386" text-anchor="middle" font-size="10.5" fill="#b45309">规则前置 · 服务端闸门</text>
+
+  <!-- 就地修改 -->
+  <rect x="990" y="455" width="215" height="62" rx="8" fill="#fffbeb" stroke="#d97706" stroke-dasharray="5,3" stroke-width="1.5"/>
+  <text x="1097" y="478" text-anchor="middle" font-size="12" font-weight="bold" fill="#92400e">就地修改（当场改）</text>
+  <text x="1097" y="498" text-anchor="middle" font-size="11" fill="#b45309">30 秒内改完重新校验，不等财务打回</text>
+  <path d="M 1090 420 L 1090 455" stroke="#d97706" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrO)"/>
+  <text x="1100" y="442" font-size="11" fill="#d97706">不通过</text>
+  <path d="M 990 486 L 795 486 L 795 398" stroke="#d97706" stroke-width="1.5" stroke-dasharray="5,3" fill="none" marker-end="url(#arrO)"/>
+
+  <!-- 通过 → 并行 -->
+  <path d="M 1200 358 L 1330 358" stroke="#334155" stroke-width="1.6" fill="none" marker-end="url(#arr)"/>
+  <text x="1212" y="350" font-size="11" fill="#334155">通过</text>
+  <path d="M 1330 358 L 1330 545 L 620 545 L 620 690" stroke="#334155" stroke-width="1.6" fill="none" marker-end="url(#arr)"/>
+  <path d="M 1330 545 L 1060 545 L 1060 690" stroke="#334155" stroke-width="1.6" fill="none" marker-end="url(#arr)"/>
+  <text x="1340" y="450" font-size="11" fill="#64748b" transform="rotate(90 1340 450)">并行分派</text>
+
+  <!-- ===== 泳道 C：并行审批 ===== -->
+  <rect x="380" y="690" width="300" height="64" rx="8" fill="#fef2f2" stroke="#ef4444" stroke-width="1.6"/>
+  <text x="530" y="714" text-anchor="middle" font-size="13" font-weight="bold" fill="#0f172a">⑤ 系主任移动端签批</text>
+  <text x="530" y="734" text-anchor="middle" font-size="11" fill="#475569">超时 24h 自动催办 · 出差可委托代办</text>
+
+  <rect x="820" y="690" width="300" height="64" rx="8" fill="#fef2f2" stroke="#ef4444" stroke-width="1.6"/>
+  <text x="970" y="714" text-anchor="middle" font-size="13" font-weight="bold" fill="#0f172a">⑥ 财务 AI 预审 + 人工抽检</text>
+  <text x="970" y="734" text-anchor="middle" font-size="11" fill="#475569">合规红线不由系统自动通过（转人工三要素留痕）</text>
+
+  <path d="M 680 722 L 740 722 L 740 775 L 760 775" stroke="#334155" stroke-width="1.6" fill="none" marker-end="url(#arr)"/>
+  <path d="M 820 722 L 780 722 L 780 775" stroke="#334155" stroke-width="1.6" fill="none" marker-end="url(#arr)"/>
+
+  <rect x="560" y="752" width="220" height="58" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="670" y="775" text-anchor="middle" font-size="13" font-weight="bold" fill="#0f172a">⑦ 电子单据直连入账</text>
+  <text x="670" y="795" text-anchor="middle" font-size="11" fill="#475569">财务复审 · 电子留痕归档</text>
+  <line x1="780" y1="781" x2="830" y2="781" stroke="#334155" stroke-width="1.6" marker-end="url(#arr)"/>
+
+  <rect x="833" y="752" width="230" height="58" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="948" y="775" text-anchor="middle" font-size="13" font-weight="bold" fill="#0f172a">⑧ 对公直付 · 快速通道</text>
+  <text x="948" y="795" text-anchor="middle" font-size="11" fill="#475569">T+3 到账 · 学校备付金免垫付</text>
+  <line x1="1063" y1="781" x2="1110" y2="781" stroke="#334155" stroke-width="1.6" marker-end="url(#arr)"/>
+
+  <rect x="1113" y="758" width="270" height="46" rx="23" fill="#1e3a8a"/>
+  <text x="1248" y="777" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">到账 · 状态全程可查</text>
+  <text x="1248" y="795" text-anchor="middle" font-size="11" fill="#dbeafe">第 3~5 天 · 无需往返问询</text>
+
+  <!-- ===== 泳道 D：解决的旧痛点 ===== -->
+  <g font-size="12">
+    <rect x="45" y="875" width="345" height="95" rx="8" fill="#fff" stroke="#93c5fd" stroke-width="1.4"/>
+    <text x="217" y="899" text-anchor="middle" font-weight="bold" fill="#1d4ed8">垫付制 → 快速通道 / 备付金</text>
+    <text x="217" y="921" text-anchor="middle" fill="#1e3a5f">小额走访走快速通道 T+3，试点期可申请</text>
+    <text x="217" y="940" text-anchor="middle" fill="#1e3a5f">学校备付金，教师不再垫资 500~2,800 元</text>
+
+    <rect x="420" y="875" width="345" height="95" rx="8" fill="#fff" stroke="#93c5fd" stroke-width="1.4"/>
+    <text x="592" y="899" text-anchor="middle" font-weight="bold" fill="#1d4ed8">规则不前置 → 提交前硬校验</text>
+    <text x="592" y="921" text-anchor="middle" fill="#1e3a5f">连号票、发票抬头、科目口径在提交前校验，</text>
+    <text x="592" y="940" text-anchor="middle" fill="#1e3a5f">"就地改"替代"事后打回"，退回率 30% → &lt;5%</text>
+
+    <rect x="795" y="875" width="345" height="95" rx="8" fill="#fff" stroke="#93c5fd" stroke-width="1.4"/>
+    <text x="967" y="899" text-anchor="middle" font-weight="bold" fill="#1d4ed8">串行签字 → 并行审批 + 催办</text>
+    <text x="967" y="921" text-anchor="middle" fill="#1e3a5f">系主任签批与财务预审并行，超时 24h 自动催办，</text>
+    <text x="967" y="940" text-anchor="middle" fill="#1e3a5f">一环出差不再停摆整条流程</text>
+
+    <rect x="1170" y="875" width="330" height="95" rx="8" fill="#fff" stroke="#93c5fd" stroke-width="1.4"/>
+    <text x="1335" y="899" text-anchor="middle" font-weight="bold" fill="#1d4ed8">科目靠猜 → 规则库自动匹配</text>
+    <text x="1335" y="921" text-anchor="middle" fill="#1e3a5f">"实习管理费 / 实践教学差旅"等口径内置规则库；</text>
+    <text x="1335" y="940" text-anchor="middle" fill="#1e3a5f">财务新规更新即生效，不再靠群里转文件</text>
+  </g>
+
+  <!-- 底部说明 -->
+  <text x="40" y="1032" font-size="11" fill="#64748b">说明：AI 能力只做识别、填单与规则校验；审批决策权保留在系主任与财务处（人工节点红框标注），合规红线不由系统自动通过，转人工兜底记录停止原因 / 接手人 / 确认时间三要素。</text>
+</svg>
+</div>
+</body>
+</html>
